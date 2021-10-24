@@ -1,4 +1,4 @@
-# POO Project
+# OOP Project
 Just a simple chess game.
 
 ---
