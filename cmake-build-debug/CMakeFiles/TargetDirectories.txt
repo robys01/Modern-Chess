@@ -1,0 +1,3 @@
+C:/Users/Robert/CLionProjects/Modern-Chess/cmake-build-debug/CMakeFiles/Modern_Chess.dir
+C:/Users/Robert/CLionProjects/Modern-Chess/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Robert/CLionProjects/Modern-Chess/cmake-build-debug/CMakeFiles/rebuild_cache.dir
