@@ -19,13 +19,13 @@ Just a simple chess game.
 - săptămâna 5 (6 noiembrie): (eventuale) modificări în urma feedback-ului
 
 #### Cerințe
-- [ ] definirea a minim 3 clase
+- [x] definirea a minim 3 clase
   - [ ] <clasa 1>
   - [ ] <clasa 2>
   - [ ] <clasa 3>
-- [ ] constructori de inițializare
-- [ ] constructor de copiere sau cc (pt minim o clasă)
-- [ ] `operator=` sau op= (pt minim o clasă, aceeași unde s-a făcut cc și destructor)
+- [x] constructori de inițializare
+- [x] constructor de copiere sau cc (pt minim o clasă)
+- [x] `operator=` sau op= (pt minim o clasă, aceeași unde s-a făcut cc și destructor)
 - [ ] destructor (pt minim o clasă, aceeași unde s-a făcut cc și op=)
 - [ ] `operator<<` pt toate clasele
 - [ ] cât mai multe `const`
