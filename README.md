@@ -1,7 +1,7 @@
 # OOP Project
 Just a simple chess game.
 
-
+Clion's erminal doesn't print unicode pieces properly. Recommend using a different ide/text editor when clonning the project.
 
 ---
 
