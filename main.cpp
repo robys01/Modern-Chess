@@ -44,10 +44,10 @@ public:
     }
 
     // Copy Constructor
-    Board(const Board &copie) {
+    Board(const Board &copy) {
         for (int i = 0; i < dim; i++)
             for (int j = 0; j < dim; j++)
-                this->boxes[i][j] = copie.boxes[i][j];
+                this->boxes[i][j] = copy.boxes[i][j];
     }
 
     virtual ~Board() {
@@ -170,14 +170,16 @@ public:
 
     virtual ~Player() = default;
 
-//    friend std::ostream &operator<<(std::ostream &os, const Player &player) {
-//        os << "Name: " << player.name << "\nColor: " << (player.whiteSide ? "White\n" : "Black\n")
-//           << "Rating: " << player.elo <<'\n';
-//        return os;
-//    }
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
         os << (player.whiteSide ? "\tWhite: " : "\tBlack: ") << player.name << " (" << player.elo << ")\n";
         return os;
+    }
+
+    Player &operator=(const Player &copy) {
+        this->name = copy.name;
+        this->whiteSide = copy.whiteSide;
+        this->elo = copy.elo;
+        return *this;
     }
 
     int getElo() const {
