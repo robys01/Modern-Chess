@@ -29,7 +29,7 @@ static const int classicBoard[8][8] = {
         136, 130, 132, 144, 160, 132, 130, 136};
 
 class Board {
-    int dim = 8;
+    const int dim = 8;
     std::vector<std::vector<int>> boxes;    // std::vector<std::vector<int>> boxes(dim, std::vector<int>(dim)) doesn't work in a class ???
 public:
     // Constructor
@@ -168,11 +168,15 @@ public:
 
     Player(const std::string &name, bool whiteSide, int elo) : name(name), whiteSide(whiteSide), elo(elo){}
 
-    virtual ~Player() { }
+    virtual ~Player() = default;
 
+//    friend std::ostream &operator<<(std::ostream &os, const Player &player) {
+//        os << "Name: " << player.name << "\nColor: " << (player.whiteSide ? "White\n" : "Black\n")
+//           << "Rating: " << player.elo <<'\n';
+//        return os;
+//    }
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
-        os << "Name: " << player.name << "\nColor: " << (player.whiteSide ? "White\n" : "Black\n")
-           << "Rating: " << player.elo <<'\n';
+        os << (player.whiteSide ? "\tWhite: " : "\tBlack: ") << player.name << " (" << player.elo << ")\n";
         return os;
     }
 
@@ -219,23 +223,42 @@ public:
     virtual ~Game() = default;
 
     friend std::ostream &operator<<(std::ostream &os, Game &game) {
-        os  << "\tBlack: " << game.playerBlack.getName() << " (" << game.playerBlack.getElo() << ")\n";
-//        showBoard();  Error
-        os  << "\tWhite: " << game.playerWhite.getName() << " (" << game.playerWhite.getElo() << ")\n";
+//        os  << "\tBlack: " << game.playerBlack.getName() << " (" << game.playerBlack.getElo() << ")\n";
+        os << game.playerBlack << game.board << game.playerWhite << '\n';
         return os;
     }
     void showBoard() {
         std::cout << this->board;
     }
 
+    void setWhite(Player &player) {
+        this->playerWhite = player;
+    }
+
+    Player getWhite() const {
+        return this->playerWhite;
+    }
+
+    void setBlack(Player &player) {
+        this->playerBlack = player;
+    }
+
+    Player getBlack() const {
+        return this->playerBlack;
+    }
 };
 
 int main() {
 
     Game sah;
-
     std::cout << sah;
 
-    std::cout << "Modern Chess!" << '\n';
+    Player p1("Robert", true, 1337);
+    Player p2("Bot", false, 1200);
+    sah.setWhite(p1);
+    sah.setBlack(p2);
+
+    std::cout << sah;
+//    std::cout << "Modern Chess!" << '\n';
     return 0;
 }
