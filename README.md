@@ -29,9 +29,9 @@ Clion's erminal doesn't print unicode pieces properly. Recommend using a differe
 - [x] `operator<<` pt toate clasele
 - [x] cât mai multe `const`
 - [x] implementarea a minim 2 funcții publice pentru funcționalități specifice temei alese (nu se iau în considerare citiri/afișări/getteri/setteri)
-  - [ ] <prima funcționalitate>
-  - [ ] <a doua funcționalitate>
-- [ ] scenariu de utilizare a claselor definite: apelarea din `main` a tuturor funcțiilor _publice_ definite (nu generați constructori/getteri/setteri dacă nu aveți nevoie de ei); apelarea se va face direct sau indirect - adică din `main` se pot apela funcții care construiesc obiecte cu clasele definite și folosesc aceste obiecte
+  - [x] <prima funcționalitate>
+  - [x] <a doua funcționalitate>
+- [x] scenariu de utilizare a claselor definite: apelarea din `main` a tuturor funcțiilor _publice_ definite (nu generați constructori/getteri/setteri dacă nu aveți nevoie de ei); apelarea se va face direct sau indirect - adică din `main` se pot apela funcții care construiesc obiecte cu clasele definite și folosesc aceste obiecte
 - [ ] după ce e gata prima temă, tag de `git`: de exemplu `v0.1`
 - [ ] GitHub Actions sau alt serviciu de CI (Continuous Integration) - exemplu [aici](https://github.com/mcmarius/demo-poo/blob/master/.github/workflows/cmake.yml) (a se vedea și `CMakeLists.txt` din același repo pt compiler flags)
 
