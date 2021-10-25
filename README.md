@@ -1,10 +1,10 @@
 # OOP Project
 Just a simple chess game.
 
-Clion's erminal doesn't print unicode pieces properly. Recommend using a different ide/text editor when clonning the project.
-![](Images/Terminal.png)
+Clion's terminal doesn't print unicode pieces properly. Recommend using a different ide/text editor when clonning the project.
+
 This is how it should look in terminal.
----
+![](Images/Terminal.png)
 
 # OOP Template
 
