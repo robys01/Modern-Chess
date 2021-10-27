@@ -16,7 +16,6 @@
 */
 
 static const char *unicode_pieces[14] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟", "♞", "♝", "♜", "♛", "♚"};
-                                    //    0    1     2     3    4     5     6    7     8    9    10    11    12
 
 static const int classicBoard[8][8] = {
         72, 66, 68, 80, 96, 68, 66, 72,
@@ -51,9 +50,6 @@ public:
     }
 
     virtual ~Board() {
-//        for(int i = 0; i < dim; i++)
-//            boxes[i].erase();
-//        boxes.erase();
         std::cout << "Board Removed\n";
     }
 
@@ -205,7 +201,6 @@ public:
     void setWhiteSide(bool whiteSide) {
         Player::whiteSide = whiteSide;
     }
-
 };
 
 class Game {
@@ -261,6 +256,5 @@ int main() {
     sah.setBlack(p2);
 
     std::cout << sah;
-//    std::cout << "Modern Chess!" << '\n';
     return 0;
 }
