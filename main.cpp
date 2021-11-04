@@ -49,7 +49,7 @@ public:
                 this->boxes[i][j] = copy.boxes[i][j];
     }
 
-    virtual ~Board() {
+    ~Board() {
         std::cout << "Board Removed\n";
     }
 
@@ -164,7 +164,7 @@ public:
 
     Player(const std::string &name, bool whiteSide, int elo) : name(name), whiteSide(whiteSide), elo(elo){}
 
-    virtual ~Player() = default;
+    ~Player() = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
         os << (player.whiteSide ? "\tWhite: " : "\tBlack: ") << player.name << " (" << player.elo << ")\n";
@@ -208,16 +208,16 @@ class Game {
     Board board;
     Player playerWhite, playerBlack;
     std::vector<std::string> moveHistory;
-    bool gameStatus;    // gameStatus == true ->  game is currently on
-                        // gameStatus == false -> game ended
+    bool gameEnded;
+
 public:
     Game() {
         playerWhite = Player("Player1", true, 1200);
         playerBlack = Player("Player2", false, 800);
-        this->gameStatus = true;
+        this->gameEnded = false;
 //        std::cout << "In Game Constructor\n";
     }
-    virtual ~Game() = default;
+    ~Game() = default;
 
     friend std::ostream &operator<<(std::ostream &os, Game &game) {
 //        os  << "\tBlack: " << game.playerBlack.getName() << " (" << game.playerBlack.getElo() << ")\n";
