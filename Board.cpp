@@ -15,7 +15,6 @@ enum class piece{ empty = 0,
 std::array<std::array<int, 8>, 8> classicBoard;
 
 
-
 // Constructor
 Board::Board() {
     boxes.resize(dim);
