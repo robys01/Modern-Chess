@@ -3,7 +3,7 @@
 //
 
 #include "Board.h"
-
+#include <string>
 static const char *unicode_pieces[14] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟", "♞", "♝", "♜", "♛", "♚"};
 static const char pieces_[14] = {'.', 'p', 'n', 'b', 'r', 'q', 'k', 'P', 'N', 'B', 'R', 'Q', 'K'};
 
@@ -45,7 +45,7 @@ std::ostream &operator<<(std::ostream &os, const Board &board) {
     for (int i = 0; i < 8; i++, os << '\n') {
         os << 8 - i << "  ";
         for (int j = 0; j < 8; j++)
-            os << Board::decode(board.boxes[i][j]) << ' ';   // Unicode characters are incorrectly displayed in JetBrains terminal
+            os << Board::decode(board.boxes[i][j]) << ' ';
     }
     os << "   ";
     for (int i = 0; i < 8; i++)
