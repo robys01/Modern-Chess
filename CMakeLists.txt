@@ -4,4 +4,5 @@ project(Modern_Chess)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Modern_Chess
-        main.cpp)
+        main.cpp
+        Board.cpp Player.cpp Game.cpp)
