@@ -1,8 +1,5 @@
 # OOP Project
-Just a simple chess game.
-
-This is how it should look in terminal.
-![](Images/Terminal.png)
+Just a simple chess game using C++ and SFML.
 
 # OOP Template
 
@@ -42,7 +39,7 @@ This is how it should look in terminal.
 - săptămâna 9 (4 decembrie): (eventuale) modificări în urma feedback-ului
 
 #### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
+- [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
 - [ ] moșteniri
   - [ ] funcții virtuale (pure)
   - [ ] apelarea constructorului din clasa de bază 
