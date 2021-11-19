@@ -49,13 +49,10 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Board &board);
 
     void readFEN();
-
-
     void resetBoard();
-
     void fillBoard();
 
-    static const char decode(int x);
+    static char decode(int x);
 };
 
 #endif //MODERN_CHESS_BOARD_H

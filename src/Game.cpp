@@ -2,7 +2,7 @@
 //// Created by Robert on 11/18/2021.
 ////
 
-#include "Game.h"
+#include "../headers/Game.h"
 
 Game::Game() {
     playerWhite = Player("Player1", true, 1200);

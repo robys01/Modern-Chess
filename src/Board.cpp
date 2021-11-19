@@ -2,12 +2,12 @@
 // Created by Robert on 11/18/2021.
 //
 
-#include "Board.h"
-#include <string>
+#include "../headers/Board.h"
+#include <string>   // getline(in
 static const char *unicode_pieces[14] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟", "♞", "♝", "♜", "♛", "♚"};
 static const char pieces_[14] = {'.', 'p', 'n', 'b', 'r', 'q', 'k', 'P', 'N', 'B', 'R', 'Q', 'K'};
 
-enum class piece{ empty = 0,
+enum class piece_val{ empty = 0,
     blackPawn = 5, blackKnight = 9, blackBishop = 17, blackRook = 33, blackQueen = 65, blackKing = 129,
     whitePawn = 6, whiteKnight = 10, whiteBishop = 18, whiteRook = 34, whiteQueen = 66, whiteKing = 130
 };
@@ -37,7 +37,6 @@ Board &Board::operator=(const Board &board) {
         for (int j = 0; j < dim; j++)
             this->boxes[i][j] = board.boxes[i][j];
 
-    std::cout << "Operator=";
     return *this;
 }
 // Stream output Operator
@@ -71,7 +70,7 @@ void Board::readFEN() {    // Incomplete
         if(s[k] > '0' && s[k] < '9') {
             int lenght = s[k] - '0';
             for(int j = column; j < column + lenght; j++)
-                classicBoard[row][j] = static_cast<int>(piece::empty);
+                classicBoard[row][j] = static_cast<int>(piece_val::empty);
             column +=lenght;
 
         }
@@ -79,51 +78,51 @@ void Board::readFEN() {    // Incomplete
         switch(s[k]) {
 
             case 'p':
-                classicBoard[row][column] = static_cast<int>(piece::blackPawn);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackPawn);
                 column++;
                 break;
             case 'b':
-                classicBoard[row][column] = static_cast<int>(piece::blackBishop);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackBishop);
                 column++;
                 break;
             case 'n':
-                classicBoard[row][column] = static_cast<int>(piece::blackKnight);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackKnight);
                 column++;
                 break;
             case 'r':
-                classicBoard[row][column] = static_cast<int>(piece::blackRook);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackRook);
                 column++;
                 break;
             case 'q':
-                classicBoard[row][column] = static_cast<int>(piece::blackQueen);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackQueen);
                 column++;
                 break;
             case 'k':
-                classicBoard[row][column] = static_cast<int>(piece::blackKing);
+                classicBoard[row][column] = static_cast<int>(piece_val::blackKing);
                 column++;
                 break;
             case 'P':
-                classicBoard[row][column] = static_cast<int>(piece::whitePawn);
+                classicBoard[row][column] = static_cast<int>(piece_val::whitePawn);
                 column++;
                 break;
             case 'B':
-                classicBoard[row][column] = static_cast<int>(piece::whiteBishop);
+                classicBoard[row][column] = static_cast<int>(piece_val::whiteBishop);
                 column++;
                 break;
             case 'N':
-                classicBoard[row][column] = static_cast<int>(piece::whiteKnight);
+                classicBoard[row][column] = static_cast<int>(piece_val::whiteKnight);
                 column++;
                 break;
             case 'R':
-                classicBoard[row][column] = static_cast<int>(piece::whiteRook);
+                classicBoard[row][column] = static_cast<int>(piece_val::whiteRook);
                 column++;
                 break;
             case 'Q':
-                classicBoard[row][column] = static_cast<int>(piece::whiteQueen);
+                classicBoard[row][column] = static_cast<int>(piece_val::whiteQueen);
                 column++;
                 break;
             case 'K':
-                classicBoard[row][column] = static_cast<int>(piece::whiteKing);
+                classicBoard[row][column] = static_cast<int>(piece_val::whiteKing);
                 column++;
                 break;
         }
@@ -144,60 +143,60 @@ void Board::fillBoard() {
             this->boxes[i][j] = classicBoard[i][j];
 }
 
-const char Board::decode(int x) {
+char Board::decode(int x) {
     int k;
-    auto piesa = static_cast<piece>(x);
+    auto piesa = static_cast<piece_val>(x);
 
     switch (piesa) {
         default:
             k = 0;
             break;
 
-        case piece::whitePawn:   // White Pawn
+        case piece_val::whitePawn:
             k = 7;
             break;
 
-        case piece::whiteKnight:   // White Knight
+        case piece_val::whiteKnight:
             k = 8;
             break;
 
-        case piece::whiteBishop:   // White Bishop
+        case piece_val::whiteBishop:
             k = 9;
             break;
 
-        case piece::whiteRook:   // White Rook
+        case piece_val::whiteRook:
             k = 10;
             break;
 
-        case piece::whiteQueen:   // White Queen
+        case piece_val::whiteQueen:
             k = 11;
             break;
 
-        case piece::whiteKing:   // White King
+        case piece_val::whiteKing:
             k = 12;
             break;
 
-        case piece::blackPawn:    // Black Pawn
+        case piece_val::blackPawn:
             k = 1;
             break;
 
-        case piece::blackKnight:    // Black Knight
+        case piece_val::blackKnight:
             k = 2;
             break;
 
-        case piece::blackBishop:    // Black Bishop
+        case piece_val::blackBishop:
             k = 3;
             break;
 
-        case piece::blackRook:    // Black Rook
+        case piece_val::blackRook:
             k = 4;
             break;
 
-        case piece::blackQueen:    // Black Queen
+        case piece_val::blackQueen:
             k = 5;
             break;
 
-        case piece::blackKing:    // Black King
+        case piece_val::blackKing:
             k = 6;
             break;
     }

@@ -15,7 +15,7 @@ class Player {
 
 public:
 
-    Player();;
+    Player();
 
     Player(const std::string &name, bool whiteSide, int elo);
 
