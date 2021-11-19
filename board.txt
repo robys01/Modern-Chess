@@ -1,12 +1,2 @@
 rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3
 rnbqkbnr/3kk3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3
-
-
-33 9 17 65 129 17 9 33
-5 5 5 5 5 5 5 5
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-6 6 6 6 6 6 6 6
-34 10 18 66 130 18 10 34
