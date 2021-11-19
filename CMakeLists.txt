@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Modern_Chess
         main.cpp
-        Board.cpp Player.cpp Game.cpp)
+        src/Board.cpp src/Player.cpp src/Game.cpp)
