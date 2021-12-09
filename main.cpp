@@ -1,6 +1,8 @@
+#include <cstring>
 #include "headers/Game.h"
 
 int main() {
+
 
     Game sah;
     std::cout << sah;

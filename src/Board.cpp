@@ -3,8 +3,8 @@
 //
 
 #include "../headers/Board.h"
-#include <string>   // getline(in
-static const char *unicode_pieces[14] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟", "♞", "♝", "♜", "♛", "♚"};
+#include <string>
+
 static const char pieces_[14] = {'.', 'p', 'n', 'b', 'r', 'q', 'k', 'P', 'N', 'B', 'R', 'Q', 'K'};
 
 enum class piece_val{ empty = 0,
@@ -127,14 +127,13 @@ void Board::readFEN() {    // Incomplete
                 break;
         }
 
-
     }
 }
 
 void Board::resetBoard() {
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            boxes[i][j] = 0;
+            boxes[i][j] = static_cast<int>(piece_val::empty);
 }
 
 void Board::fillBoard() {

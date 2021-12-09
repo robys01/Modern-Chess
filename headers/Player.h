@@ -26,11 +26,9 @@ public:
     Player &operator=(const Player &copy);
 
     int getElo() const;
-
     void setElo(int elo);
 
     std::string getName();
-
     void setName(std::string &name);
 
     bool isWhiteSide() const;
