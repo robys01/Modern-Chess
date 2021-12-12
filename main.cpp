@@ -19,7 +19,7 @@
 int main() {
 
     Game sah;
-//    std::cout<<sah;
+    std::cout << sah << '\n';
     sah.run();
 
     return 0;
