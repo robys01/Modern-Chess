@@ -5,29 +5,29 @@
 #ifndef MODERN_CHESS_GAME_H
 #define MODERN_CHESS_GAME_H
 
-#include <vector>
-#include <string>
 #include "Board.h"
-#include "Player.h"
+#include "Piece.h"
+
+const int WIDTH = 512;
+const float squareWidth = WIDTH / 8.0f;
+
+const float defaultWIDTH = 488.0f;
+const float scale = WIDTH / defaultWIDTH;
 
 class Game {
+    sf::RenderWindow window;
+    Board chessBoard;
+    std::vector<Piece> pieces;
 
-    Board tabla;
-    Player playerWhite, playerBlack;
-    bool gameEnded;
 
 public:
     Game();
-    ~Game() = default;
+    ~Game();
 
-    friend std::ostream &operator<<(std::ostream &os, Game &game);
-
-
-    // Getters and Setters
-    void setWhite(Player &player);
-    Player getWhite() const;
-    void setBlack(Player &player);
-    Player getBlack() const;
+    void run();
+    void drawGame(sf::RenderWindow &window);
+    void setPieces();
+    friend std::ostream &operator<<(std::ostream &os, const Game &game);
 };
 
 #endif //MODERN_CHESS_GAME_H
