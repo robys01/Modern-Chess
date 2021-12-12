@@ -16,23 +16,18 @@ class Player {
 public:
 
     Player();
-
     Player(const std::string &name, bool whiteSide, int elo);
-
     ~Player() = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player);
-
     Player &operator=(const Player &copy);
 
+    // Getters & Setters
     int getElo() const;
     void setElo(int elo);
-
     std::string getName();
     void setName(std::string &name);
-
     bool isWhiteSide() const;
-
     void setWhiteSide(bool whiteSide);
 };
 

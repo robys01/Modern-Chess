@@ -1,58 +1,41 @@
 //
-// Created by Robert on 11/18/2021.
+// Created by Robert on 12/8/2021.
 //
-
 #ifndef MODERN_CHESS_BOARD_H
 #define MODERN_CHESS_BOARD_H
 
-#include <iostream>
-#include <fstream>
-#include <array>
-#include <vector>
 
-/*
- * Notations in binary code:
- *
-*  Pawn    = 0000 0100
-*  Knight  = 0000 1000
-*  Bishop  = 0001 0000
-*  Rook    = 0010 0000
-*  Queen   = 0100 0000
-*  King    = 1000 0000
-*
-*  Black   = 0000 0001
-*  White   = 0000 0010
- *
- *  Changed implicit notation.
-*/
+#include <SFML/Graphics.hpp>    // includes vector & array ???
+//#include <vector>
+//#include <array>
+
+const sf::Color defaultColor1(139,69,19);
+const sf::Color defaultColor2(222,184,135);
 
 
 class Board {
-    const int dim = 8;
-    std::vector<std::vector<int>> boxes;    // std::vector<std::vector<int>> boxes(dim, std::vector<int>(dim)) doesn't work in a class ???
+    float squareSize;
+    std::array<sf::RectangleShape, 64> board;
+    std::array<sf::Text, 8> row, column;
+
+    std::vector<std::pair<sf::Color, sf::Color>> themes;
+    sf::Color color1;
+    sf::Color color2;
+    sf::Font font;
 
 public:
-    // Constructor
-    Board();
+    // Constructor and Destructor
+    Board(const int boardHeight, sf::Color color1 = defaultColor1, sf::Color color2 = defaultColor2);
+    ~Board();
 
-    // Copy Constructor
-    Board(const Board &copy);
-
-    ~Board() {
-        std::cout << "Board Removed\n";
-    }
-
-    // Operator=
-    Board &operator=(const Board &board);
-
-    // Stream output Operator
-    friend std::ostream &operator<<(std::ostream &os, const Board &board);
-
-    void readFEN();
-    void resetBoard();
-    void fillBoard();
-
-    static char decode(int x);
+    void setBoard();
+    void setRows();
+    void setColumns();
+    void setThemes();
+    void changeTheme(const std::string& str = std::string("next"));
+    void changeColors(sf::Color Color1, sf::Color Color2);
+    void drawBoard(sf::RenderWindow &window);
+    friend std::ostream &operator<<(std::ostream &os, const Board &board1);
 };
 
 #endif //MODERN_CHESS_BOARD_H

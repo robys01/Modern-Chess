@@ -12,9 +12,8 @@
 
 class Game {
 
-    Board board;
+    Board tabla;
     Player playerWhite, playerBlack;
-//    std::vector<std::string> moveHistory;
     bool gameEnded;
 
 public:
@@ -22,7 +21,7 @@ public:
     ~Game() = default;
 
     friend std::ostream &operator<<(std::ostream &os, Game &game);
-    void showBoard();
+
 
     // Getters and Setters
     void setWhite(Player &player);

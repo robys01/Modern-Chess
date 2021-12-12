@@ -4,7 +4,7 @@
 
 #include "../headers/Game.h"
 
-Game::Game() {
+Game::Game() : tabla(512){
     playerWhite = Player("Player1", true, 1200);
     playerBlack = Player("Player2", false, 800);
     this->gameEnded = false;
@@ -12,14 +12,11 @@ Game::Game() {
 }
 
 std::ostream &operator<<(std::ostream &os, Game &game) {
-//        os  << "\tBlack: " << game.playerBlack.getName() << " (" << game.playerBlack.getElo() << ")\n";
-    os << game.playerBlack << game.board << game.playerWhite << '\n';
+    os << game.playerBlack  << game.playerWhite << '\n';
     return os;
 }
 
-void Game::showBoard() {
-    std::cout << this->board;
-}
+
 
 // Getters and Setters
 void Game::setWhite(Player &player) {

@@ -12,10 +12,19 @@ else ()
     endif ()
 endif ()
 
+## If you want to link SFML statically
+set(SFML_STATIC_LIBRARIES TRUE)
+
+## In most cases better set in the CMake cache
+set(SFML_DIR "C:/Faculta/SFML/lib/cmake/SFML")
+
 set(SOURCES
         main.cpp
         src/Board.cpp src/Player.cpp src/Game.cpp)
 
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio)
+
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
