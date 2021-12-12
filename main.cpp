@@ -18,6 +18,20 @@
 
 int main() {
 
+    Game sah;
+//    std::cout<<sah;
+    sah.run();
+
+    return 0;
+}
+
+
+
+
+
+/*
+int main() {
+
     sf::RenderWindow window(sf::VideoMode(512, 512), "Modern Chess", sf::Style::Close);
 
     Board tabla(512);
@@ -47,4 +61,4 @@ int main() {
     }
 
     return 0;
-}
+}*/
