@@ -20,7 +20,7 @@ set(SFML_DIR "C:/Faculta/SFML/lib/cmake/SFML")
 
 set(SOURCES
         main.cpp
-        src/Board.cpp src/Player.cpp src/Game.cpp)
+        src/Game.cpp src/Board.cpp src/Piece.cpp)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_executable(${PROJECT_NAME} ${SOURCES})
