@@ -5,7 +5,7 @@
 #ifndef MODERN_CHESS_PIECE_H
 #define MODERN_CHESS_PIECE_H
 
-#include <SFML/Graphics.hpp>
+#include "Textures.h"
 
 enum class PieceType {
     Empty, Pawn, Knight, Bishop, Rook, Queen, King
@@ -17,6 +17,7 @@ enum class Side {
 
 
 class Piece {
+protected:
     int code;
     PieceType pieceType;
     Side side;
@@ -42,20 +43,6 @@ public:
     Piece operator=(const Piece &piece);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
 
-private:
-    sf::Texture whitePawnTexture;
-    sf::Texture whiteKnightTexture;
-    sf::Texture whiteBishopTexture;
-    sf::Texture whiteRookTexture;
-    sf::Texture whiteQueenTexture;
-    sf::Texture whiteKingTexture;
-
-    sf::Texture blackPawnTexture;
-    sf::Texture blackKnightTexture;
-    sf::Texture blackBishopTexture;
-    sf::Texture blackRookTexture;
-    sf::Texture blackQueenTexture;
-    sf::Texture blackKingTexture;
 };
 
 

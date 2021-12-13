@@ -6,38 +6,35 @@
 
 
 Piece::Piece(){
-    if(loadTextures())
-        std::cout << "Could not load textures";
+
 }
 
 Piece::Piece(PieceType pieceType, Side side) {
-    if(loadTextures())
-        std::cout << "Could not load textures"; // EXIT() ?
 
     switch(pieceType) {
         case PieceType::Pawn:
             code = (1 << 2) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whitePawnTexture : blackPawnTexture;
+            pTexture = side == Side::WHITE ? Textures::whitePawn : Textures::blackPawn;
             break;
         case PieceType::Knight:
             code = (1 << 3) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whiteKnightTexture : blackKnightTexture;
+            pTexture = side == Side::WHITE ? Textures::whiteKnight : Textures::blackKnight;
             break;
         case PieceType::Bishop:
             code = (1 << 4) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whiteBishopTexture : blackBishopTexture;
+            pTexture = side == Side::WHITE ? Textures::whiteBishop : Textures::blackBishop;
             break;
         case PieceType::Rook:
             code = (1 << 5) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whiteRookTexture : blackRookTexture;
+            pTexture = side == Side::WHITE ? Textures::whiteRook : Textures::blackRook;
             break;
         case PieceType::Queen:
             code = (1 << 6) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whiteQueenTexture : blackQueenTexture;
+            pTexture = side == Side::WHITE ? Textures::whiteQueen : Textures::blackQueen;
             break;
         case PieceType::King:
             code = (1 << 7) + 1 + (side == Side::WHITE);
-            pTexture = side == Side::WHITE ? whiteKingTexture : blackKingTexture;
+            pTexture = side == Side::WHITE ? Textures::whiteKing : Textures::blackKing;
             break;
         case PieceType::Empty:
             code = 0;
@@ -46,7 +43,7 @@ Piece::Piece(PieceType pieceType, Side side) {
 //    pieceSize = (float)(pTexture.getSize().x + pTexture.getSize().y) / 2.0f;
 
     pSprite.setOrigin(pieceSize / 2.0f, pieceSize / 2.0f);
-
+//    pSprite.setColor((side == Side::WHITE ? sf::Color::Green : sf::Color::Red));
     pTexture.setSmooth(true);
     pSprite.setTexture(pTexture);
 
@@ -63,37 +60,6 @@ Piece::Piece(const Piece &piece) {
 
 
 Piece::~Piece() = default;
-
-int Piece::loadTextures() {
-
-    if(!whitePawnTexture.loadFromFile("resources/wP.png"))
-        return EXIT_FAILURE;
-    if(!whiteKnightTexture.loadFromFile("resources/wN.png"))
-        return EXIT_FAILURE;
-    if(!whiteBishopTexture.loadFromFile("resources/wB.png"))
-        return EXIT_FAILURE;
-    if(!whiteRookTexture.loadFromFile("resources/wR.png"))
-        return EXIT_FAILURE;
-    if(!whiteQueenTexture.loadFromFile("resources/wQ.png"))
-        return EXIT_FAILURE;
-    if(!whiteKingTexture.loadFromFile("resources/wK.png"))
-        return EXIT_FAILURE;
-
-    if(!blackPawnTexture.loadFromFile("resources/bP.png"))
-        return EXIT_FAILURE;
-    if(!blackKnightTexture.loadFromFile("resources/bN.png"))
-        return EXIT_FAILURE;
-    if(!blackBishopTexture.loadFromFile("resources/bB.png"))
-        return EXIT_FAILURE;
-    if(!blackRookTexture.loadFromFile("resources/bR.png"))
-        return EXIT_FAILURE;
-    if(!blackQueenTexture.loadFromFile("resources/bQ.png"))
-        return EXIT_FAILURE;
-    if(!blackKingTexture.loadFromFile("resources/bK.png"))
-        return EXIT_FAILURE;
-
-    return EXIT_SUCCESS;
-}
 
 void Piece::drawPiece(sf::RenderWindow &window) {
     window.draw(pSprite);
@@ -117,8 +83,8 @@ Piece Piece::operator=(const Piece &piece) {
     side = piece.side;
 
     pTexture = piece.pTexture;
-    pSprite = piece.pSprite;
-    pSprite.setTexture(pTexture);
+    pSprite = piece.pSprite;        // Both of them are required, Sprite's operator= doesn't
+    pSprite.setTexture(pTexture);   // copy the image, resulting a white square
 
     return *this;
 }
