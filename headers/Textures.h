@@ -24,7 +24,7 @@ public:
     static sf::Texture blackQueen;
     static sf::Texture blackKing;
 
-    static sf::Texture loadTexture(std::string str);
+    static sf::Texture loadTexture(const std::string& str);
 };
 
 

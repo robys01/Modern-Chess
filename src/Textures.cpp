@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../headers/Textures.h"
 
-sf::Texture Textures::loadTexture(std::string str) {
+sf::Texture Textures::loadTexture(const std::string& str) {
     sf::Texture texture;
     if (!texture.loadFromFile(str))
         std::cout << "Failed to open" << str << '\n';
