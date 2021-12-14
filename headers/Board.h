@@ -9,10 +9,6 @@
 //#include <vector>
 //#include <array>
 
-const sf::Color defaultColor1(139,69,19);
-const sf::Color defaultColor2(222,184,135);
-
-
 class Board {
     float squareSize;
     std::array<sf::RectangleShape, 64> board;
@@ -23,9 +19,12 @@ class Board {
     sf::Color color2;
     sf::Font font;
 
+    static const sf::Color defaultColor1;
+    static const sf::Color defaultColor2;
+
 public:
     // Constructor and Destructor
-    Board(const int boardHeight, sf::Color color1 = defaultColor1, sf::Color color2 = defaultColor2);
+    Board(int boardHeight, sf::Color color1 = defaultColor1, sf::Color color2 = defaultColor2);
     ~Board();
 
     void setBoard();

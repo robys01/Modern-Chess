@@ -4,6 +4,9 @@
 #include <iostream>
 #include "../headers/Board.h"
 
+const sf::Color Board::defaultColor1(139,69,19);    // Light Brown
+const sf::Color Board::defaultColor2(222,184,135);  // Brown
+
 
 Board::Board(const int boardHeight, sf::Color color1, sf::Color color2)
         : squareSize((float)boardHeight / 8.0f), color1(color1), color2(color2) {
@@ -20,7 +23,7 @@ Board::~Board() = default;
 void Board::setBoard() {
     for(int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
-            board[i * 8 + j].setPosition(squareSize * i, squareSize * j);
+            board[i * 8 + j].setPosition(squareSize * (float)i, squareSize * (float)j);
             board[i * 8 + j].setSize(sf::Vector2f(squareSize, squareSize));
             board[i * 8 + j].setFillColor(((i + j) % 2 ? color1 : color2));
         }
@@ -31,7 +34,7 @@ void Board::setRows() {
     for(int i = 0; i < 8; i++) {
         row[i].setFont(font);
         row[i].setString(char('8' - i));
-        row[i].setPosition(squareSize / 32, 0.0f + i * squareSize);
+        row[i].setPosition(squareSize / 32, 0.0f + (float)i * squareSize);
         row[i].setCharacterSize((int) squareSize / 4);
         row[i].setFillColor((i % 2 ? color2 : color1));
     }
@@ -41,7 +44,7 @@ void Board::setColumns() {
     for(int i = 0; i < 8; i++) {
         column[i].setFont(font);
         column[i].setString(char('a' + i));
-        column[i].setPosition(squareSize * 0.81f + i * squareSize, (squareSize * 8) * 0.96f);
+        column[i].setPosition(squareSize * 0.81f + (float)i * squareSize, (squareSize * 8) * 0.96f);
         column[i].setCharacterSize((int) squareSize / 4);
         column[i].setFillColor((i % 2 ? color1 : color2));
     }
@@ -61,7 +64,7 @@ void Board::changeTheme(const std::string& str) {
         x %= themes.size();
     } else if(str == "previous") {
         x--;
-        x > themes.size() ? x = themes.size() - 1 : x = x;
+        x > themes.size() ? x = themes.size() - 1 : ' ';
     }
     changeColors(themes[x].first, themes[x].second);
 }
@@ -94,9 +97,5 @@ std::ostream &operator<<(std::ostream &os, const Board &board1) {
         for(int j = 0; j < 8; j++)
             os << board1.board[i * 8 + j].getPosition().x << ' ' << board1.board[i * 8 + j].getPosition().y << "  ";
 
-
     return os;
 }
-
-
-
