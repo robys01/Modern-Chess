@@ -9,6 +9,7 @@ sf::Texture Textures::loadTexture(const std::string& str) {
     sf::Texture texture;
     if (!texture.loadFromFile(str))
         std::cout << "Failed to open" << str << '\n';
+    texture.setSmooth(true);
     return texture;
 }
 
