@@ -5,7 +5,7 @@
 #define MODERN_CHESS_BOARD_H
 
 
-#include <SFML/Graphics.hpp>    // includes vector & array ???
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <array>
 
