@@ -66,7 +66,7 @@ void Game::readFEN(std::string args) {
 
     int i, nrElements = 0, nrKings = 0;
     for (i = 0; s[i] != ' '; i++) {
-        if (s[i] == 'K' or s[i] == 'k')
+        if (s[i] == 'K' || s[i] == 'k')
             nrKings++;
         if (nrKings > 2)
             throw error_fen();
