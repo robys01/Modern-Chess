@@ -3,7 +3,7 @@
 //
 
 #include "../headers/ChessExceptions.h"
-
+#include <string>
 
 error_chess::error_chess(const std::string &arg) : runtime_error("Chess error: " + arg) {}
 
