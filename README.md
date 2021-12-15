@@ -7,7 +7,7 @@ Just a simple chess game using C++ and SFML.
 
 - [x] nume proiect (îl puteți schimba ulterior)
 - [x] Scurtă descriere a temei alese, ce v-ați propus să implementați
-- [ ] actualizat `.gitignore` dacă nu sunt ignorate fișierele (binare) generate de editor/IDE; puteți folosi https://gitignore.io
+- [x] actualizat `.gitignore` dacă nu sunt ignorate fișierele (binare) generate de editor/IDE; puteți folosi https://gitignore.io
 
 ## Tema 1
 
@@ -40,17 +40,17 @@ Just a simple chess game using C++ and SFML.
 
 #### Cerințe
 - [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri
-  - [ ] funcții virtuale (pure)
-  - [ ] apelarea constructorului din clasa de bază 
-  - [ ] smart pointers / pointeri normali și verificat să nu fie memory leaks
-- [ ] excepții
-  - [ ] predefinite
-  - [ ] ierarhie proprie (cu baza `std::exception` sau derivată din `std::exception`)
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
+- [x] moșteniri
+  - [x] funcții virtuale (pure)
+  - [x] apelarea constructorului din clasa de bază 
+  - [x] smart pointers / pointeri normali și verificat să nu fie memory leaks
+- [x] excepții
+  - [x] predefinite
+  - [x] ierarhie proprie (cu baza `std::exception` sau derivată din `std::exception`)
+  - [x] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
+- [x] funcții și atribute `static`
+- [x] STL
+- [x] cât mai multe `const`
 - [ ] la fel ca mai sus, apelarea tuturor funcțiilor publice din `main`
 - [ ] încă un tag de `git`: de exemplu `v0.2`
 
