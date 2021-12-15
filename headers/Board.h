@@ -6,8 +6,8 @@
 
 
 #include <SFML/Graphics.hpp>    // includes vector & array ???
-//#include <vector>
-//#include <array>
+#include <vector>
+#include <array>
 
 class Board {
     float squareSize;
