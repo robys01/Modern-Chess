@@ -57,7 +57,7 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
 }
 
 void Game::readFEN(std::string args) {
-    std::ifstream fin(args, fin.in);
+    std::ifstream fin(args);
     if (!fin.is_open())
         throw error_open(args);
 
