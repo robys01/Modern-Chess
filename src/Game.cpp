@@ -3,14 +3,21 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "../headers/Game.h"
+#include "../headers/ChessExceptions.h"
 
 Game::Game() :
         window(sf::VideoMode(WIDTH, WIDTH), "Modern Chess", sf::Style::Close),
         chessBoard(WIDTH) {
 
-    setPieces();
-
+    try {
+        readFEN("board.txt");
+        setPieces();
+    } catch (error_chess &error) {
+        std::terminate();   // implicit si std::cerr << error.what();
+    }
 }
 
 Game::~Game() = default;
@@ -37,72 +44,111 @@ void Game::run() {
 
 void Game::drawGame(sf::RenderWindow &window) {
     chessBoard.drawBoard(window);
-    for (int i = 0; i < 64; i++)
-        pieces[i].drawPiece(window);
-
+    for (auto &it: pieces)
+        it->drawPiece(window);
 }
 
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
-    for (int i = 0; i < 64; i++)
-        std::cout << game.pieces[i].getCode() << ((i + 1) % 8 ? ' ' : '\n');
-
+    for (unsigned int i = 0; i < game.pieces.size(); i++)
+        std::cout << (*game.pieces[i]) << ((i + 1) % 8 ? " " : "\n");
 
     return os;
 }
 
-void Game::setPieces() {
+void Game::readFEN(std::string args) {
+    std::ifstream fin(args, fin.in);
+    if (!fin.is_open())
+        throw error_open(args);
 
-    Piece bpawn(PieceType::Pawn, Side::BLACK);
-    Piece brook(PieceType::Rook, Side::BLACK);
-    Piece bknight(PieceType::Knight, Side::BLACK);
-    Piece bbishop(PieceType::Bishop, Side::BLACK);
-    Piece bqueen(PieceType::Queen, Side::BLACK);
-    Piece bking(PieceType::King, Side::BLACK);
+    std::string s;
+    getline(fin, s);
 
-    Piece wpawn(PieceType::Pawn, Side::WHITE);
-    Piece wrook(PieceType::Rook, Side::WHITE);
-    Piece wknight(PieceType::Knight, Side::WHITE);
-    Piece wbishop(PieceType::Bishop, Side::WHITE);
-    Piece wqueen(PieceType::Queen, Side::WHITE);
-    Piece wking(PieceType::King, Side::WHITE);
+    int i, nrElements = 0, nrKings = 0;
+    for (i = 0; s[i] != ' '; i++) {
+        if (s[i] == 'K' or s[i] == 'k')
+            nrKings++;
+        if (nrKings > 2)
+            throw error_fen();
 
-    Piece empty(PieceType::Empty, Side::EMPTY);
+        if (s[i] >= '1' && s[i] <= '9') {
+            nrElements += (int) s[i] - '0';
+            for (int j = (int) (s[i] - '0'); j > 0; j--)
+                pieces.push_back(std::make_shared<Piece>());
+        }
 
+        switch (s[i]) {
+            case 'p':
+                pieces.push_back(std::make_shared<Pawn>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'P':
+                pieces.push_back(std::make_shared<Pawn>(Side::WHITE));
+                nrElements++;
+                break;
 
-    pieces.emplace_back(brook);
-    pieces.emplace_back(bknight);
-    pieces.emplace_back(bbishop);
-    pieces.emplace_back(bqueen);
-    pieces.emplace_back(bking);
-    pieces.emplace_back(bbishop);
-    pieces.emplace_back(bknight);
-    pieces.emplace_back(brook);
+            case 'n':
+                pieces.push_back(std::make_shared<Knight>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'N':
+                pieces.push_back(std::make_shared<Knight>(Side::WHITE));
+                nrElements++;
+                break;
 
-    for (int i = 0; i < 8; i++)
-        pieces.emplace_back(bpawn);
+            case 'b':
+                pieces.push_back(std::make_shared<Bishop>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'B':
+                pieces.push_back(std::make_shared<Bishop>(Side::WHITE));
+                nrElements++;
+                break;
 
-    for (int i = 0; i < 32; i++)
-        pieces.emplace_back(empty);
+            case 'r':
+                pieces.push_back(std::make_shared<Rook>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'R':
+                pieces.push_back(std::make_shared<Rook>(Side::WHITE));
+                nrElements++;
+                break;
 
-    for (int i = 0; i < 8; i++)
-        pieces.emplace_back(wpawn);
+            case 'q':
+                pieces.push_back(std::make_shared<Queen>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'Q':
+                pieces.push_back(std::make_shared<Queen>(Side::WHITE));
+                nrElements++;
+                break;
 
-    pieces.emplace_back(wrook);
-    pieces.emplace_back(wknight);
-    pieces.emplace_back(wbishop);
-    pieces.emplace_back(wqueen);
-    pieces.emplace_back(wking);
-    pieces.emplace_back(wbishop);
-    pieces.emplace_back(wknight);
-    pieces.emplace_back(wrook);
+            case 'k':
+                pieces.push_back(std::make_shared<King>(Side::BLACK));
+                nrElements++;
+                break;
+            case 'K':
+                pieces.push_back(std::make_shared<King>(Side::WHITE));
+                nrElements++;
+                break;
 
-    for (int i = 0; i < 64; i++) {
-        pieces[i].setPosition(squareWidth * (i % 8) + squareWidth / 2.0f, (squareWidth * (i / 8)) + squareWidth / 2.0f);
-//        pieces[i].setPosition(squareWidth * (i % 8), (squareWidth *  (i / 8))); // in case Origin is (0, 0)
-
-        pieces[i].setScale(1 * scale, 1 * scale);
-        std::cout << pieces[i] << ((i + 1) % 8 ? ' ' : '\n');
+        }
     }
+    if (nrKings != 2)
+        throw error_fen();
 
+    if (nrElements != 64)
+        throw error_fen();
+
+    fin.close();
+}
+
+void Game::setPieces() {
+    for (unsigned int i = 0; i < pieces.size(); i++) {
+
+        pieces[i]->setPosition(squareWidth * (i % 8) + squareWidth / 2.0f,
+                               (squareWidth * (i / 8)) + squareWidth / 2.0f);
+        pieces[i]->setScale(1 * scale, 1 * scale);
+//        std::cout << (*pieces[i]) << ((i + 1) % 8 ? ' ' : '\n');
+    }
 }
