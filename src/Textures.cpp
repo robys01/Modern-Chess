@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include "../headers/Textures.h"
+#include "../headers/ChessExceptions.h"
 
-sf::Texture Textures::loadTexture(const std::string& str) {
+sf::Texture Textures::loadTexture(const std::string &str) {
     sf::Texture texture;
     if (!texture.loadFromFile(str))
-        std::cout << "Failed to open" << str << '\n';
+        throw error_open(str);  // std::cout << "Failed to open" << str << '\n';
     texture.setSmooth(true);
     return texture;
 }
