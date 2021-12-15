@@ -11,20 +11,23 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     env:
-      BUILD_TYPE: release
+      BUILD_TYPE: Release
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
         cxx: [g++, clang++]
+        cmake_config_flags: [-DBUILD_SHARED_LIBS=FALSE]
         include:
           - os: macos-10.15
             cxx: clang++
+            cmake_config_flags: -DSFML_BUILD_FRAMEWORKS=FALSE -DSFML_DEPENDENCIES_INSTALL_PREFIX=$GITHUB_WORKSPACE/artifacts -DBUILD_SHARED_LIBS=FALSE
           - os: windows-2019
             cxx: cl
           - os: windows-2019
             cxx: g++
             cmake_generator: "\"MinGW Makefiles\""
+            cmake_config_flags: -DBUILD_SHARED_LIBS=TRUE
 
     steps:
       - uses: actions/checkout@v2
@@ -35,6 +38,13 @@ jobs:
           echo $GITHUB_WORKSPACE
           mkdir $GITHUB_WORKSPACE/build
           mkdir $GITHUB_WORKSPACE/artifacts
+          cp CMakeListsGI.txt CMakeLists.txt
+      # taken from SFML Github Actions
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+
+
       - name: Configure CMake
         env:
           CXX: ${{ matrix.cxx }}
@@ -44,13 +54,12 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}/build
         run: |
-          CMAKE_GENERATOR=${{ matrix.cmake_generator }} cmake -S $GITHUB_WORKSPACE -B . -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-
+          CMAKE_GENERATOR=${{ matrix.cmake_generator }} cmake -S $GITHUB_WORKSPACE -B . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/artifacts ${{matrix.cmake_config_flags}}
       - name: Build
         working-directory: ${{ github.workspace }}/build
         shell: bash
         # Execute the build.  You can specify a specific target with "--target <NAME>"
-        run: cmake --build . --config $BUILD_TYPE -j4
+        run: cmake --build . --config $BUILD_TYPE -j6
 
       - name: Install
         # working-directory: ${{ github.workspace }}/build
@@ -68,7 +77,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           type: 'zip'
-          path: artifacts
+          path: artifacts/bin
           filename: release_${{ env.TAG_NAME }}_${{ matrix.os }}_${{ matrix.cxx }}.zip
       - name: Release
         uses: softprops/action-gh-release@v1
