@@ -1,2 +1,2 @@
-rnbqkbnr/1qqqqqq1/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3
-rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3
+rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+rnbqkbnr/1qqqqqq1/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
