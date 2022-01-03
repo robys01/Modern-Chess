@@ -542,4 +542,5 @@ bool inCheck(unsigned int pos) {
 //
 //    int di[] = {};
 //    int dj[] = {};
+    return false;
 }
