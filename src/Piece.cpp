@@ -39,6 +39,23 @@ void Piece::setOrigin(float x, float y) {
     pSprite.setOrigin(x, y);
 }
 
+int Piece::getCode() const {
+    return code;
+}
+
+sf::Vector2f Piece::getPosition() {
+    sf::Vector2f pos = pSprite.getPosition();
+    return pos;
+}
+
+std::shared_ptr <Piece> Piece::clone() const {
+    return std::make_shared <Piece>(*this);
+}
+
+Side Piece::getSide() const {
+    return this->side;
+}
+
 
 /// Class Pawn
 Pawn::Pawn(const Side &side) {
@@ -51,11 +68,15 @@ Pawn::Pawn(const Side &side) {
 Pawn::~Pawn() = default;
 
 void Pawn::canMove() {
-    std::cout << "Doar in fata\n";
+    std::cout << "Un pas inainte, 0 inapoi\n";
+}
+
+std::shared_ptr<Piece> Pawn::clone() const {
+    return std::make_shared <Pawn>(*this);
 }
 
 
-/// Class Knight(int)side
+/// Class Knight
 Knight::Knight(const Side &side) {
     this->side = side;
     code = (1 << 3) + (int) side;
@@ -68,7 +89,11 @@ Knight::~Knight() {
 }
 
 void Knight::canMove() {
-    Piece::canMove();
+    std::cout<<"Rapa dunga dunga, la piratu-i Punga\n";
+}
+
+std::shared_ptr<Piece> Knight::clone() const {
+    return std::make_shared <Knight>(*this);
 }
 
 
@@ -85,7 +110,11 @@ Bishop::~Bishop() {
 }
 
 void Bishop::canMove() {
-    Piece::canMove();
+    std::cout<<"Dumnezeu sa va binecuvanteze\n";
+}
+
+std::shared_ptr<Piece> Bishop::clone() const {
+    return std::make_shared <Bishop>(*this);
 }
 
 /// Class Rook
@@ -101,7 +130,11 @@ Rook::~Rook() {
 }
 
 void Rook::canMove() {
-    Piece::canMove();
+    std::cout<<"Vine tura cu viteza\n";
+}
+
+std::shared_ptr<Piece> Rook::clone() const {
+    return std::make_shared <Rook>(*this);
 }
 
 /// Class Queen
@@ -117,7 +150,11 @@ Queen::~Queen() {
 }
 
 void Queen::canMove() {
-    Piece::canMove();
+    std::cout<<"Ma duc unde vreau\n";
+}
+
+std::shared_ptr<Piece> Queen::clone() const {
+    return std::make_shared <Queen>(*this);
 }
 
 /// Class King
@@ -133,5 +170,9 @@ King::~King() {
 }
 
 void King::canMove() {
-    Piece::canMove();
+    std::cout<<"El Patron\n";
+}
+
+std::shared_ptr<Piece> King::clone() const {
+    return std::make_shared <King>(*this);
 }
