@@ -11,6 +11,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     env:
+      SFML_VERSION: "2021-11-18"
       BUILD_TYPE: Release
     strategy:
       fail-fast: false
@@ -44,6 +45,13 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
 
+      - name: Cache deps
+        uses: actions/cache@v2
+        id: cache-deps
+        with:
+          path: |
+            build/_deps
+          key: ${{ matrix.os }}-${{ runner.os }}-${{ matrix.cxx }}-${{ env.SFML_VERSION }}
 
       - name: Configure CMake
         env:
