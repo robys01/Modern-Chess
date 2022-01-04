@@ -19,8 +19,6 @@ protected:
     Side side;
 
     sf::Sprite pSprite;
-    void setScale(float x, float y);
-    void setOrigin(float x, float y);
 
 public:
     Piece(const Side& side);
@@ -30,6 +28,8 @@ public:
     void drawPiece(sf::RenderWindow &window);
     void setPosition(float x, float y);
     sf::Vector2f getPosition();
+    void setScale(float x, float y);
+    void setOrigin(float x, float y);
 
     int getCode() const;
     Side getSide() const;
