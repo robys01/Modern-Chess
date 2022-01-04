@@ -28,10 +28,6 @@ void Piece::setScale(float x, float y) {
     pSprite.setScale(x, y);
 }
 
-void Piece::setOrigin(float x, float y) {
-    pSprite.setOrigin(x, y);
-}
-
 int Piece::getCode() const {
     return code;
 }

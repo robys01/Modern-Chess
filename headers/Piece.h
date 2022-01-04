@@ -29,7 +29,6 @@ public:
     void setPosition(float x, float y);
     sf::Vector2f getPosition();
     void setScale(float x, float y);
-    void setOrigin(float x, float y);
 
     int getCode() const;
     Side getSide() const;
