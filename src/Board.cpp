@@ -71,7 +71,7 @@ void Board::changeTheme(const std::string &str) {
 }
 
 
-void Board::changeColors(sf::Color Color1, sf::Color Color2) {
+void Board::changeColors(const sf::Color &Color1, const sf::Color &Color2) {
     this->color1 = Color1;
     this->color2 = Color2;
 

@@ -12,31 +12,31 @@ enum class Side {
     EMPTY = 0, BLACK = 1, WHITE = 2
 };
 
-/// Can make class Piece absctract class, but I will use class Piece as an empty space
+/// Class Piece is abstract
 class Piece {
 protected:
     int code;
     Side side;
 
     sf::Sprite pSprite;
+    void setScale(float x, float y);
+    void setOrigin(float x, float y);
 
 public:
-    Piece();
+    Piece(const Side& side);
     virtual ~Piece();
-    virtual void canMove();
+    virtual void canMove() = 0;
 
     void drawPiece(sf::RenderWindow &window);
     void setPosition(float x, float y);
     sf::Vector2f getPosition();
-    void setScale(float x, float y);
-    void setOrigin(float x, float y);
 
     int getCode() const;
     Side getSide() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Piece& piece);
 
-    virtual std::shared_ptr<Piece> clone() const;
+    virtual std::shared_ptr<Piece> clone() const = 0;
 };
 
 
@@ -95,6 +95,17 @@ class King : public Piece {
 public:
     King(const Side& side);
     ~King() override;
+    void canMove() override;
+
+    std::shared_ptr<Piece> clone() const override;
+};
+
+/// Used for the empty spaces on the chess board
+class EmptySpace : public Piece {
+
+public:
+    EmptySpace();
+    ~EmptySpace() override;
     void canMove() override;
 
     std::shared_ptr<Piece> clone() const override;

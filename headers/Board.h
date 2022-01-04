@@ -32,7 +32,7 @@ public:
     void setColumns();
     void setThemes();
     void changeTheme(const std::string& str = std::string("next"));
-    void changeColors(sf::Color Color1, sf::Color Color2);
+    void changeColors(const sf::Color &Color1, const sf::Color &Color2);
     void drawBoard(sf::RenderWindow &window);
     friend std::ostream &operator<<(std::ostream &os, const Board &board1);
 };

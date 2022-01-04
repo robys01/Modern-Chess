@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cctype>
 #include "../headers/Game.h"
 #include "../headers/ChessExceptions.h"
 
@@ -16,7 +17,8 @@ Game::Game() :
         readFEN("board.txt");
         setPieces();
     } catch (error_chess &error) {
-        std::terminate();   // implicit si std::cerr << error.what();
+        std::cerr << error.what();
+        std::exit(1);
     }
     for (int i = 0; i < 64; i++)
         std::cout << (i % 8) + (i / 8) * 8 << ((i + 1) % 8 ? " " : "\n");
@@ -25,7 +27,9 @@ Game::Game() :
     std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << whiteTurn << '\n';
 }
 
-Game::~Game() = default;
+Game::~Game() {
+    std::cout << "Chess ended successfully\n";
+};
 
 void Game::run() {
     std::cout << chessBoard;
@@ -106,64 +110,35 @@ void Game::readFEN(const std::string &args) {
         if (s[i] >= '1' && s[i] <= '9') {
             nrElements += (int) s[i] - '0';
             for (int j = (int) (s[i] - '0'); j > 0; j--)
-                pieces.push_back(std::make_shared<Piece>());
+                pieces.push_back(std::make_shared<EmptySpace>());
         }
 
-        switch (s[i]) {
-            case 'p':
-                pieces.push_back(std::make_shared<Pawn>(Side::BLACK));
-                nrElements++;
-                break;
+        auto side = std::isupper(s[i]) ? Side::WHITE : Side::BLACK; // <cctype>
+        switch (std::toupper(s[i])) {
             case 'P':
-                pieces.push_back(std::make_shared<Pawn>(Side::WHITE));
-                nrElements++;
-                break;
-
-            case 'n':
-                pieces.push_back(std::make_shared<Knight>(Side::BLACK));
+                pieces.push_back(std::make_shared<Pawn>(side));
                 nrElements++;
                 break;
             case 'N':
-                pieces.push_back(std::make_shared<Knight>(Side::WHITE));
-                nrElements++;
-                break;
-
-            case 'b':
-                pieces.push_back(std::make_shared<Bishop>(Side::BLACK));
+                pieces.push_back(std::make_shared<Knight>(side));
                 nrElements++;
                 break;
             case 'B':
-                pieces.push_back(std::make_shared<Bishop>(Side::WHITE));
-                nrElements++;
-                break;
-
-            case 'r':
-                pieces.push_back(std::make_shared<Rook>(Side::BLACK));
+                pieces.push_back(std::make_shared<Bishop>(side));
                 nrElements++;
                 break;
             case 'R':
-                pieces.push_back(std::make_shared<Rook>(Side::WHITE));
-                nrElements++;
-                break;
-
-            case 'q':
-                pieces.push_back(std::make_shared<Queen>(Side::BLACK));
+                pieces.push_back(std::make_shared<Rook>(side));
                 nrElements++;
                 break;
             case 'Q':
-                pieces.push_back(std::make_shared<Queen>(Side::WHITE));
-                nrElements++;
-                break;
-
-            case 'k':
-                pieces.push_back(std::make_shared<King>(Side::BLACK));
+                pieces.push_back(std::make_shared<Queen>(side));
                 nrElements++;
                 break;
             case 'K':
-                pieces.push_back(std::make_shared<King>(Side::WHITE));
+                pieces.push_back(std::make_shared<King>(side));
                 nrElements++;
                 break;
-
         }
     }
     if (nrKings != 2)
@@ -260,7 +235,7 @@ void Game::resetPossibleMoves() {
 
 
 void Game::dragMove(unsigned int buttonPos) {
-    /// You won't be able to drag a black piece on white's turn, and vice versa
+///// You won't be able to drag a black piece on white's turn, and vice versa
 //    if (nrMoves % 2 == pieces[buttonPos]->getCode() % 2)
 //        return;
 
@@ -358,13 +333,13 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     pieces[start]->setPosition(squareWidth * (destination % 8) + squareWidth / 2.0f,
                                (squareWidth * (destination / 8)) + squareWidth / 2.0f);
     pieces[destination] = pieces[start]->clone();
-    pieces[start] = std::make_shared<Piece>();  /// Becomes empty space
+    pieces[start] = std::make_shared<EmptySpace>();  /// Becomes empty space
 
     nrMoves++;
     whiteTurn = !whiteTurn;
 
     std::cout << '\n';
-    std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (bool) whiteTurn << '\n';
+    std::cout << "Nr moves: " << nrMoves << '\n' << (whiteTurn ? "White Turn" : "Black Turn") << '\n';
 }
 
 std::vector<unsigned int> Game::pawnMoves(unsigned i) {

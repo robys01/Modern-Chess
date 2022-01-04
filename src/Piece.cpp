@@ -6,17 +6,10 @@
 
 
 /// Class Piece
-Piece::Piece() {
-    code = 0;
-    side = Side::EMPTY;
-
-}
+Piece::Piece(const Side& side) : code(0), side(side) {}
 
 Piece::~Piece() = default;
 
-void Piece::canMove() {
-    std::cout << "Ce sa muti?\n";
-}
 
 void Piece::setPosition(float x, float y) {
     pSprite.setPosition(x, y);
@@ -48,18 +41,13 @@ sf::Vector2f Piece::getPosition() {
     return pos;
 }
 
-std::shared_ptr <Piece> Piece::clone() const {
-    return std::make_shared <Piece>(*this);
-}
-
 Side Piece::getSide() const {
     return this->side;
 }
 
 
 /// Class Pawn
-Pawn::Pawn(const Side &side) {
-    this->side = side;
+Pawn::Pawn(const Side &side) : Piece(side){
     code = (1 << 2) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whitePawn : Textures::blackPawn);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -77,8 +65,7 @@ std::shared_ptr<Piece> Pawn::clone() const {
 
 
 /// Class Knight
-Knight::Knight(const Side &side) {
-    this->side = side;
+Knight::Knight(const Side &side) : Piece(side) {
     code = (1 << 3) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteKnight : Textures::blackKnight);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -98,8 +85,7 @@ std::shared_ptr<Piece> Knight::clone() const {
 
 
 /// Class Bishop
-Bishop::Bishop(const Side &side) {
-    this->side = side;
+Bishop::Bishop(const Side &side) : Piece(side) {
     code = (1 << 4) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteBishop : Textures::blackBishop);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -118,8 +104,7 @@ std::shared_ptr<Piece> Bishop::clone() const {
 }
 
 /// Class Rook
-Rook::Rook(const Side &side) {
-    this->side = side;
+Rook::Rook(const Side &side) : Piece(side) {
     code = (1 << 5) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteRook : Textures::blackRook);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -138,8 +123,7 @@ std::shared_ptr<Piece> Rook::clone() const {
 }
 
 /// Class Queen
-Queen::Queen(const Side &side) {
-    this->side = side;
+Queen::Queen(const Side &side) : Piece(side) {
     code = (1 << 6) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteQueen : Textures::blackQueen);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -158,8 +142,7 @@ std::shared_ptr<Piece> Queen::clone() const {
 }
 
 /// Class King
-King::King(const Side &side) {
-    this->side = side;
+King::King(const Side &side) : Piece(side) {
     code = (1 << 7) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteKing : Textures::blackKing);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -175,4 +158,16 @@ void King::canMove() {
 
 std::shared_ptr<Piece> King::clone() const {
     return std::make_shared <King>(*this);
+}
+
+EmptySpace::EmptySpace() : Piece(Side::EMPTY) {}
+
+EmptySpace::~EmptySpace() = default;
+
+void EmptySpace::canMove() {
+    std::cout << "Ce sa muti?\n";
+}
+
+std::shared_ptr<Piece> EmptySpace::clone() const {
+    return std::make_shared <EmptySpace>(*this);
 }
