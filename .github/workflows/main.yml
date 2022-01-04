@@ -38,7 +38,7 @@ jobs:
           echo $GITHUB_WORKSPACE
           mkdir $GITHUB_WORKSPACE/build
           mkdir $GITHUB_WORKSPACE/artifacts
-          cp CMakeListsGI.txt CMakeLists.txt
+          cp .github/CMakeLists.txt CMakeLists.txt
       # taken from SFML Github Actions
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'

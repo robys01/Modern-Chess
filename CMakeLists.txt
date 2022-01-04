@@ -22,9 +22,12 @@ set(SOURCES
         main.cpp
         src/Game.cpp src/Board.cpp src/Piece.cpp src/Textures.cpp src/ChessExceptions.cpp)
 
+set(CMAKE_INSTALL_PREFIX artifacts)
+
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio)
 
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(DIRECTORY resources DESTINATION bin)
