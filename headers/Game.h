@@ -27,8 +27,8 @@ class Game {
     bool whiteChecked = false;
     bool blackChecked = false;
 
-    unsigned int whiteKingPos = 60;
-    unsigned int blackKingPos = 4;
+    unsigned int whiteKingPos;
+    unsigned int blackKingPos;
 
     bool whiteTurn;
     bool whiteCastleK;
