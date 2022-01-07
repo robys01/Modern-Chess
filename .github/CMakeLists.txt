@@ -3,21 +3,21 @@ project(Modern_Chess)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(MSVC)
-    add_compile_options("/W4")
-else()
+if (MSVC)
+    add_compile_options("/W4" "/permissive-")
+else ()
     add_compile_options("-Wall" "-Wextra" "-pedantic" "-g")
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_compile_options("-stdlib=libstdc++")
-    endif()
-endif()
+    endif ()
+endif ()
 
 include(FetchContent)
 
 FetchContent_Declare(
         SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG        2888d9c56eba4dedb93a84a3c57957e4a907d428 # master as of 2021-11-18
+        GIT_TAG 2888d9c56eba4dedb93a84a3c57957e4a907d428 # master as of 2021-11-18
 )
 
 FetchContent_MakeAvailable(SFML)

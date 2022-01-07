@@ -6,7 +6,7 @@
 
 
 /// Class Piece
-Piece::Piece(const Side& side) : code(0), side(side) {}
+Piece::Piece(const Side &side) : code(0), side(side) {}
 
 Piece::~Piece() = default;
 
@@ -43,7 +43,7 @@ Side Piece::getSide() const {
 
 
 /// Class Pawn
-Pawn::Pawn(const Side &side) : Piece(side){
+Pawn::Pawn(const Side &side) : Piece(side) {
     code = (1 << 2) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whitePawn : Textures::blackPawn);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
@@ -56,7 +56,7 @@ void Pawn::canMove() {
 }
 
 std::shared_ptr<Piece> Pawn::clone() const {
-    return std::make_shared <Pawn>(*this);
+    return std::make_shared<Pawn>(*this);
 }
 
 
@@ -72,11 +72,11 @@ Knight::~Knight() {
 }
 
 void Knight::canMove() {
-    std::cout<<"Rapa dunga dunga, la piratu-i Punga\n";
+    std::cout << "Rapa dunga dunga, la piratu-i Punga\n";
 }
 
 std::shared_ptr<Piece> Knight::clone() const {
-    return std::make_shared <Knight>(*this);
+    return std::make_shared<Knight>(*this);
 }
 
 
@@ -92,11 +92,11 @@ Bishop::~Bishop() {
 }
 
 void Bishop::canMove() {
-    std::cout<<"Dumnezeu sa va binecuvanteze\n";
+    std::cout << "Dumnezeu sa va binecuvanteze\n";
 }
 
 std::shared_ptr<Piece> Bishop::clone() const {
-    return std::make_shared <Bishop>(*this);
+    return std::make_shared<Bishop>(*this);
 }
 
 /// Class Rook
@@ -111,11 +111,11 @@ Rook::~Rook() {
 }
 
 void Rook::canMove() {
-    std::cout<<"Vine tura cu viteza\n";
+    std::cout << "Vine tura cu viteza\n";
 }
 
 std::shared_ptr<Piece> Rook::clone() const {
-    return std::make_shared <Rook>(*this);
+    return std::make_shared<Rook>(*this);
 }
 
 /// Class Queen
@@ -130,11 +130,11 @@ Queen::~Queen() {
 }
 
 void Queen::canMove() {
-    std::cout<<"Ma duc unde vreau\n";
+    std::cout << "Ma duc unde vreau\n";
 }
 
 std::shared_ptr<Piece> Queen::clone() const {
-    return std::make_shared <Queen>(*this);
+    return std::make_shared<Queen>(*this);
 }
 
 /// Class King
@@ -149,11 +149,11 @@ King::~King() {
 }
 
 void King::canMove() {
-    std::cout<<"El Patron\n";
+    std::cout << "El Patron\n";
 }
 
 std::shared_ptr<Piece> King::clone() const {
-    return std::make_shared <King>(*this);
+    return std::make_shared<King>(*this);
 }
 
 EmptySpace::EmptySpace() : Piece(Side::EMPTY) {}
@@ -165,5 +165,5 @@ void EmptySpace::canMove() {
 }
 
 std::shared_ptr<Piece> EmptySpace::clone() const {
-    return std::make_shared <EmptySpace>(*this);
+    return std::make_shared<EmptySpace>(*this);
 }

@@ -4,7 +4,7 @@ project(Modern_Chess)
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)
-    add_compile_options(/W4)
+    add_compile_options(/W4 /permissive-)
 else ()
     add_compile_options(-Wall -Wextra -pedantic -g)
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

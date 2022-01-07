@@ -9,7 +9,7 @@
 #include "../headers/Game.h"
 #include "../headers/ChessExceptions.h"
 
-Game* Game::chess = nullptr;
+Game *Game::chess = nullptr;
 
 Game::Game() :
         window(sf::VideoMode(WIDTH, HEIGHT), "Modern Chess", sf::Style::Close | sf::Style::Resize),
@@ -26,16 +26,16 @@ Game::Game() :
         std::cout << (i % 8) + (i / 8) * 8 << ((i + 1) % 8 ? " " : "\n");
 
     std::cout << '\n';
-    std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << whiteTurn << '\n';
-    std::cout<<"black King = " << blackKingPos << "whiteKing = " << whiteKingPos << '\n';
+    std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
+    std::cout << "black King = " << blackKingPos << " whiteKing = " << whiteKingPos << '\n';
 }
 
 Game::~Game() {
     std::cout << "Chess ended successfully!\n";
 }
 
-Game* Game::get_app() {
-    if(chess == nullptr) chess = new Game;
+Game *Game::get_app() {
+    if (chess == nullptr) chess = new Game;
     return chess;
 }
 
@@ -295,7 +295,8 @@ std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
         pieces[moves[it]] = pieces[buttonPos]->clone();
         pieces[buttonPos] = std::make_shared<EmptySpace>();
 
-        if (pieces[moves[it]]->getCode() == 129 + (int) whiteTurn)    /// If a King is selected, updates the position of it
+        if (pieces[moves[it]]->getCode() ==
+            129 + (int) whiteTurn)    /// If a King is selected, updates the position of it
             whiteTurn ? whiteKingPos = moves[it] : blackKingPos = moves[it];
 
         if (isCheck(pieces[moves[it]]->getSide())) {
@@ -366,11 +367,11 @@ void Game::dragMove(unsigned int buttonPos) {
                 std::cout << "Black King check!\n";
                 blackChecked = true;
             }
-            /// DRAW CONDITIONS
+                /// DRAW CONDITIONS
             else if ((isCheckmate(Side::WHITE) && whiteTurn) ||
-                    (isCheckmate(Side::BLACK) && !whiteTurn))
+                     (isCheckmate(Side::BLACK) && !whiteTurn))
                 std::cout << "Stalemate!";
-            else if(nrMovesWithoutCapture >= 50)
+            else if (nrMovesWithoutCapture >= 50)
                 std::cout << "Draw by the 50 move rule!";
             // Draw by repetition
 
@@ -392,7 +393,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
 
     if (pieces[destination]->getSide() != Side::EMPTY)
         nrMovesWithoutCapture = -1;
-    if(enPassant == (int)destination) {
+    if (enPassant == (int) destination) {
         nrMovesWithoutCapture = -1;
         pieces[destination + (whiteTurn ? 8 : -8)] = std::make_shared<EmptySpace>();
     }
@@ -408,7 +409,8 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     enPassant = -1;
 
     /// En Passant
-    if(pieces[destination]->getCode() == 5 + (int)!whiteTurn && (int)(start - destination) == 16*(!whiteTurn ? 1 : -1)) {    // Gotta reverse turns
+    if (pieces[destination]->getCode() == 5 + (int) !whiteTurn &&
+        (int) (start - destination) == 16 * (!whiteTurn ? 1 : -1)) {    // Gotta reverse turns
         enPassant = (int) destination + (!whiteTurn ? 8 : -8);
     }
 
@@ -424,7 +426,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
 
     std::cout << '\n';
     std::cout << "Nr moves: " << nrMoves << '\n' << (whiteTurn ? "White Turn" : "Black Turn") << '\n';
-    std::cout<< "En Passant: " << enPassant << '\n';
+    std::cout << "En Passant: " << enPassant << '\n';
 }
 
 std::vector<unsigned int> Game::pawnMoves(unsigned i) {
@@ -450,10 +452,10 @@ std::vector<unsigned int> Game::pawnMoves(unsigned i) {
         if ((i + 1) % 8 != 0 && pieces[i + 9]->getSide() == Side::WHITE)
             moves.push_back(i + 9);
         /// En Passant Left
-        if(i % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::WHITE && enPassant == (int)i + 7)
+        if (i % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::WHITE && enPassant == (int) i + 7)
             moves.push_back(i + 7);
         /// En Passant Right
-        if((i + 1) % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::WHITE && enPassant == (int)i + 9)
+        if ((i + 1) % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::WHITE && enPassant == (int) i + 9)
             moves.push_back(i + 9);
 
     } else if (pieces[i]->getCode() & (int) Side::WHITE) {
@@ -477,10 +479,10 @@ std::vector<unsigned int> Game::pawnMoves(unsigned i) {
             moves.push_back(i - 7);
 
         /// En Passant Left
-        if(i % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::BLACK && enPassant == (int)i - 7)
+        if (i % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::BLACK && enPassant == (int) i - 7)
             moves.push_back(i - 7);
         /// En Passant Right
-        if((i + 1) % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::BLACK && enPassant == (int)i - 9)
+        if ((i + 1) % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::BLACK && enPassant == (int) i - 9)
             moves.push_back(i - 9);
     }
 
