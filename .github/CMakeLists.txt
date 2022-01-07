@@ -33,4 +33,4 @@ target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 install(DIRECTORY resources DESTINATION bin)
-
+install(FILES board.txt DESTINATION bin)
