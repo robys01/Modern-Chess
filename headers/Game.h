@@ -23,8 +23,12 @@ class Game {
     std::vector<std::shared_ptr<Piece>> pieces;
     std::array<sf::RectangleShape, 64> possibleMoves;
 
+    /// Chess mechanics variables
     bool whiteChecked = false;
     bool blackChecked = false;
+
+    unsigned int whiteKingPos = 60;
+    unsigned int blackKingPos = 4;
 
     bool whiteTurn;
     bool whiteCastleK;
@@ -39,17 +43,22 @@ class Game {
 public:
     Game();
     ~Game();
-
     void run();
+
+private:
     void drawGame();
     void readFEN(const std::string& args);
     void setPieces();
+    void setPiece(unsigned int pos);
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
+    void printPieces();
 
     bool isPiece(unsigned int i);
-    void dragMove(unsigned int buttonPos);
     void drawPossibleMove(unsigned int val);
     void resetPossibleMoves();
+    std::vector<unsigned int> pieceMoves(unsigned int buttonPos);
+    std::vector<unsigned int> legalMoves(unsigned int buttonPos);
+    void dragMove(unsigned int buttonPos);
     void make_move(unsigned int start, unsigned int destination);
 
     std::vector<unsigned int> pawnMoves(unsigned int i);
@@ -58,6 +67,9 @@ public:
     std::vector<unsigned int> rookMoves(unsigned int pos);
     std::vector<unsigned int> queenMoves(unsigned int pos);
     std::vector<unsigned int> kingMoves(unsigned int pos);
+
+    bool isCheck(Side kingSide);
+    bool isCheckmate(Side kingSide);
 };
 
 #endif //MODERN_CHESS_GAME_H
