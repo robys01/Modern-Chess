@@ -1,5 +1,9 @@
 # OOP Project
-Just a simple chess game using C++ and SFML.
+[![C++ CI](https://github.com/Robyss/Modern-Chess/actions/workflows/main.yml/badge.svg)](https://github.com/Robyss/Modern-Chess/actions/workflows/main.yml)
+[![Code Quality Score](https://api.codiga.io/project/30651/score/svg)](https://app.codiga.io/public/project/30651/Modern-Chess/dashboard)
+[![Code Quality Grade](https://api.codiga.io/project/30651/status/svg)](https://app.codiga.io/public/user/github/Robyss)
+
+Just a simple chess engine using C++ and SFML.
 
 # OOP Template
 
@@ -51,8 +55,8 @@ Just a simple chess game using C++ and SFML.
 - [x] funcții și atribute `static`
 - [x] STL
 - [x] cât mai multe `const`
-- [ ] la fel ca mai sus, apelarea tuturor funcțiilor publice din `main`
-- [ ] încă un tag de `git`: de exemplu `v0.2`
+- [x] la fel ca mai sus, apelarea tuturor funcțiilor publice din `main`
+- [x] încă un tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
 
@@ -62,6 +66,6 @@ Just a simple chess game using C++ and SFML.
 - săptămâna 12 (22-29 decembrie): (eventuale) modificări în urma feedback-ului
 
 #### Cerințe
-- [ ] 2 design patterns
+- [x] 2 design patterns
 - [ ] funcții și clase șablon (`template`)
 - [ ] un ultim (?) tag de `git`: de exemplu `v0.3` sau `v1.0`
