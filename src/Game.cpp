@@ -52,13 +52,11 @@ void Game::run() {
             }
             if (e.type == sf::Event::KeyPressed) {
                 /// Change board theme
-                if (e.key.code == sf::Keyboard::Right) {
+                if (e.key.code == sf::Keyboard::Right)
                     chessBoard.changeTheme();
-                } else if (e.key.code == sf::Keyboard::Left)
+                else if (e.key.code == sf::Keyboard::Left)
                     chessBoard.changeTheme("previous");
-            }
-            if (e.type == sf::Event::KeyPressed) {
-                if (e.key.code == sf::Keyboard::R) {    /// Reset
+                else if (e.key.code == sf::Keyboard::R) {    /// Reset
                     pieces.clear();
                     resetPossibleMoves();
                     readFEN("board.txt");
@@ -66,7 +64,6 @@ void Game::run() {
                     std::cout << "Board has been reset\n";
                 }
             }
-
             ////// Move mechanics //////
             if (e.type == e.MouseButtonPressed) {
                 if (e.mouseButton.button == sf::Mouse::Left) {
@@ -84,7 +81,6 @@ void Game::run() {
                 }
             }////////////////////////////////
         }
-
         drawGame();
         window.display();
     }
@@ -393,7 +389,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
 
     if (pieces[destination]->getSide() != Side::EMPTY)
         nrMovesWithoutCapture = -1;
-    if (enPassant == (int) destination) {
+    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int)whiteTurn) {
         nrMovesWithoutCapture = -1;
         pieces[destination + (whiteTurn ? 8 : -8)] = std::make_shared<EmptySpace>();
     }
@@ -413,8 +409,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         (int) (start - destination) == 16 * (!whiteTurn ? 1 : -1)) {    // Gotta reverse turns
         enPassant = (int) destination + (!whiteTurn ? 8 : -8);
     }
-
-    if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
+    else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::BLACK);
         setPiece(destination);
     } else if (pieces[destination]->getCode() == 6 && destination < 8) {  /// White Pawn Promote
@@ -422,7 +417,6 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         setPiece(destination);
     } else if (start == whiteKingPos || start == blackKingPos) /// Updates the position of the Kings
         start == whiteKingPos ? whiteKingPos = destination : blackKingPos = destination;
-
 
     std::cout << '\n';
     std::cout << "Nr moves: " << nrMoves << '\n' << (whiteTurn ? "White Turn" : "Black Turn") << '\n';
