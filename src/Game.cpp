@@ -72,7 +72,7 @@ void Game::run() {
 
                         unsigned int buttonPos((e.mouseButton.x / squareSize) +
                                                ((e.mouseButton.y / squareSize) * (8 * (HEIGHT / window.getSize().y))));
-                        pieces[buttonPos]->canMove();
+                        pieces[buttonPos]->isPressed();
                         std::cout << buttonPos << ' ';
 
                         if (isPiece(buttonPos))
@@ -263,27 +263,35 @@ void Game::resetPossibleMoves() {
         it.setFillColor(sf::Color::Transparent);
 }
 
-std::vector<unsigned int> Game::pieceMoves(unsigned int buttonPos) {
-    if (pieces[buttonPos]->getCode() == 5 + (int) whiteTurn)
-        return pawnMoves(buttonPos);
-    else if (pieces[buttonPos]->getCode() == 9 + (int) whiteTurn)
-        return knightMoves(buttonPos);
-    else if (pieces[buttonPos]->getCode() == 17 + (int) whiteTurn)
-        return bishopMoves(buttonPos);
-    else if (pieces[buttonPos]->getCode() == 33 + (int) whiteTurn)
-        return rookMoves(buttonPos);
-    else if (pieces[buttonPos]->getCode() == 65 + (int) whiteTurn)
-        return queenMoves(buttonPos);
-    else if (pieces[buttonPos]->getCode() == 129 + (int) whiteTurn)
-        return kingMoves(buttonPos);
-
-    return {};
+void Game::enPassantMoves(unsigned int pos, std::vector<unsigned int> &moves) {
+    std::cout<<"de ce nu merge?\n";
+    if (pieces[pos]->getCode() == 5) {
+        /// En Passant Left
+        if (pos % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::WHITE && enPassant == (int) pos + 7)
+            moves.push_back(pos + 7);
+        /// En Passant Right
+        if ((pos + 1) % 8 != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::WHITE &&
+            enPassant == (int) pos + 9)
+            moves.push_back(pos + 9);
+    } else if (pieces[pos]->getCode() == 6) {
+        /// En Passant Left
+        if (pos % 8 != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::BLACK && enPassant == (int) pos - 7)
+            moves.push_back(pos - 7);
+        /// En Passant Right
+        if ((pos + 1) % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::BLACK && enPassant == (int) pos - 9)
+            moves.push_back(pos - 9);
+    }
 }
+
 
 std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
     std::vector<unsigned int> moves;
 
-    moves = pieceMoves(buttonPos);
+    if(pieces[buttonPos]->getSide() == (whiteTurn ? Side::WHITE : Side::BLACK))
+        moves = pieces[buttonPos]->canMove(pieces, buttonPos);
+
+    if(pieces[buttonPos]->getCode() == 5 + (int)whiteTurn)
+        enPassantMoves(buttonPos, moves);
 
     ///// Can't move pinned Pieces /////    ... and can't move until is not Check anymore
     for (unsigned int it = 0; it < moves.size();) {
@@ -389,7 +397,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
 
     if (pieces[destination]->getSide() != Side::EMPTY)
         nrMovesWithoutCapture = -1;
-    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int)whiteTurn) {
+    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int) whiteTurn) {
         nrMovesWithoutCapture = -1;
         pieces[destination + (whiteTurn ? 8 : -8)] = std::make_shared<EmptySpace>();
     }
@@ -408,8 +416,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     if (pieces[destination]->getCode() == 5 + (int) !whiteTurn &&
         (int) (start - destination) == 16 * (!whiteTurn ? 1 : -1)) {    // Gotta reverse turns
         enPassant = (int) destination + (!whiteTurn ? 8 : -8);
-    }
-    else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
+    } else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::BLACK);
         setPiece(destination);
     } else if (pieces[destination]->getCode() == 6 && destination < 8) {  /// White Pawn Promote
@@ -421,187 +428,6 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     std::cout << '\n';
     std::cout << "Nr moves: " << nrMoves << '\n' << (whiteTurn ? "White Turn" : "Black Turn") << '\n';
     std::cout << "En Passant: " << enPassant << '\n';
-}
-
-std::vector<unsigned int> Game::pawnMoves(unsigned i) {
-    /// Could've done it way better but it worked on the first try so... :P
-    std::vector<unsigned int> moves;
-
-    if (pieces[i]->getCode() & (int) Side::BLACK) {
-        // Promote
-        if (i > 55) return moves;
-        // Simple move
-        if (pieces[i + 8]->getCode() == 0)
-            moves.push_back(i + 8);
-
-        // Possible 2 squares move
-        if (i >= 8 && i <= 15)
-            if (pieces[i + 16]->getCode() == 0 && pieces[i + 8]->getCode() == 0)
-                moves.push_back(i + 16);
-
-        // Left capture black pawn
-        if (i % 8 != 0 && pieces[i + 7]->getSide() == Side::WHITE)
-            moves.push_back(i + 7);
-        // Right capture black pawn
-        if ((i + 1) % 8 != 0 && pieces[i + 9]->getSide() == Side::WHITE)
-            moves.push_back(i + 9);
-        /// En Passant Left
-        if (i % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::WHITE && enPassant == (int) i + 7)
-            moves.push_back(i + 7);
-        /// En Passant Right
-        if ((i + 1) % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::WHITE && enPassant == (int) i + 9)
-            moves.push_back(i + 9);
-
-    } else if (pieces[i]->getCode() & (int) Side::WHITE) {
-        // Promote
-        if (i < 8) return moves;
-
-        // Simple move
-        if (pieces[i - 8]->getCode() == 0)
-            moves.push_back(i - 8);
-
-        // Possible 2 squares move
-        if (i >= 47 && i <= 56)
-            if (pieces[i - 16]->getCode() == 0 && pieces[i - 8]->getCode() == 0)
-                moves.push_back(i - 16);
-
-        // Left capture white pawn
-        if (i % 8 != 0 && pieces[i - 9]->getCode() & (int) Side::BLACK)
-            moves.push_back(i - 9);
-        // Right capture black pawn
-        if ((i + 1) % 8 != 0 && pieces[i - 7]->getCode() & (int) Side::BLACK)
-            moves.push_back(i - 7);
-
-        /// En Passant Left
-        if (i % 8 != 0 && enPassant != -1 && pieces[i + 1]->getSide() == Side::BLACK && enPassant == (int) i - 7)
-            moves.push_back(i - 7);
-        /// En Passant Right
-        if ((i + 1) % 8 != 0 && enPassant != -1 && pieces[i - 1]->getSide() == Side::BLACK && enPassant == (int) i - 9)
-            moves.push_back(i - 9);
-    }
-
-    return moves;
-}
-
-std::vector<unsigned int> Game::knightMoves(unsigned int pos) {
-    std::vector<unsigned int> moves;
-
-    int di[] = {-2, -2, -1, -1, 1, 1, 2, 2};
-    int dj[] = {-1, 1, -2, 2, -2, 2, -1, 1};
-
-    int i = pos / 8;
-    int j = pos % 8;
-
-    for (int d = 0; d < 8; d++) {
-        int i_next = i + di[d];
-        int j_next = j + dj[d];
-        if (i_next >= 0 && i_next < 8 && j_next >= 0 && j_next < 8) {
-            unsigned int m = i_next * 8 + j_next;
-            if (pieces[m]->getSide() != pieces[pos]->getSide())
-                moves.push_back(m);
-        }
-    }
-    return moves;
-}
-
-std::vector<unsigned int> Game::bishopMoves(unsigned int pos) {
-    std::vector<unsigned int> moves;
-
-    int i = pos / 8;
-    int j = pos % 8;
-
-    int di[] = {1, 1, -1, -1};
-    int dj[] = {1, -1, 1, -1};
-
-    for (int d = 0; d < 4; d++) {
-        int i_next = i + di[d];
-        int j_next = j + dj[d];
-        while (i_next >= 0 && i_next < 8 && j_next >= 0 && j_next < 8) {
-            unsigned int m = i_next * 8 + j_next;
-            if (pieces[m]->getSide() == pieces[pos]->getSide())
-                break;
-            else if (pieces[m]->getSide() == Side::EMPTY)
-                moves.push_back(m);
-            else {
-                moves.push_back(m);
-                break;
-            }
-
-            i_next += di[d];
-            j_next += dj[d];
-        }
-
-    }
-    return moves;
-}
-
-std::vector<unsigned int> Game::rookMoves(unsigned int pos) {
-    std::vector<unsigned int> moves;
-    int i = pos / 8;
-    int j = pos % 8;
-
-    int di[] = {0, 1, 0, -1};
-    int dj[] = {1, 0, -1, 0};
-
-    for (int d = 0; d < 4; d++) {
-        int i_next = i + di[d];
-        int j_next = j + dj[d];
-        while (i_next >= 0 && i_next < 8 && j_next >= 0 && j_next < 8) {
-            unsigned int m = i_next * 8 + j_next;
-            if (pieces[m]->getSide() == pieces[pos]->getSide())
-                break;
-            else if (pieces[m]->getSide() == Side::EMPTY)
-                moves.push_back(m);
-            else {
-                moves.push_back(m);
-                break;
-            }
-
-            i_next += di[d];
-            j_next += dj[d];
-        }
-
-    }
-    return moves;
-}
-
-std::vector<unsigned int> Game::queenMoves(unsigned int pos) {
-    auto moves = bishopMoves(pos);
-    auto m1 = rookMoves(pos);
-
-    for (unsigned int &i: m1)
-        moves.push_back(i);
-
-    return moves;
-}
-
-std::vector<unsigned int> Game::kingMoves(unsigned int pos) {
-    std::vector<unsigned int> moves;
-
-    int i = pos / 8;
-    int j = pos % 8;
-
-    int di[] = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int dj[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-    for (int d = 0; d < 8; d++) {
-        int i_next = i + di[d];
-        int j_next = j + dj[d];
-
-        int m = i_next * 8 + j_next;
-        if (i_next >= 0 && i_next < 8 && j_next >= 0 && j_next < 8 &&
-            pieces[pos]->getSide() != pieces[m]->getSide())
-            moves.push_back(m);
-    }
-
-    /// Castling mechanics
-    if (pieces[pos]->getSide() == Side::WHITE) {
-
-    } else {
-
-    }
-
-    return moves;
 }
 
 bool Game::isCheck(Side kingSide) {
@@ -616,51 +442,50 @@ bool Game::isCheck(Side kingSide) {
 
     if ((kingSide == Side::WHITE && (pieces[kingPos - 7]->getCode() == 5 || pieces[kingPos - 9]->getCode() == 5)) ||
         (kingSide == Side::BLACK && (pieces[kingPos + 7]->getCode() == 6 || pieces[kingPos + 9]->getCode() == 6))) {
-//        std::cout << "In check by Pawn" << '\n';
         return true;
     }
 
-    moves = Game::knightMoves(kingPos);
+    auto knight = std::make_shared<Knight>(Side::WHITE);
+    moves = knight->canMove(pieces, kingPos);
     for (unsigned int &i: moves)
         if (pieces[kingPos]->getSide() != pieces[i]->getSide()
             && pieces[i]->getSide() != Side::EMPTY
             && pieces[i]->getCode() == 9 + (kingSide == Side::WHITE ? 0 : 1)) {
-//            std::cout << "In check by Knight from " << i << '\n';
             return true;
         }
-    moves = Game::bishopMoves(kingPos);
+    auto bishop = std::make_shared<Bishop>(Side::WHITE);
+    moves = bishop->canMove(pieces, kingPos);
     for (unsigned int &i: moves)
         if (pieces[kingPos]->getSide() != pieces[i]->getSide()
             && pieces[i]->getSide() != Side::EMPTY
             && pieces[i]->getCode() == 17 + (kingSide == Side::WHITE ? 0 : 1)) {
-//            std::cout << "In check by Bishop from " << i << '\n';
             return true;
         }
-    moves = Game::rookMoves(kingPos);
+    auto rook = std::make_shared<Rook>(Side::WHITE);
+    moves = rook->canMove(pieces, kingPos);
     for (unsigned int &i: moves)
         if (pieces[kingPos]->getSide() != pieces[i]->getSide()
             && pieces[i]->getSide() != Side::EMPTY
             && pieces[i]->getCode() == 33 + (kingSide == Side::WHITE ? 0 : 1)) {
-//            std::cout << "In check by Rook from " << i << '\n';
             return true;
         }
-    moves = Game::queenMoves(kingPos);
+    auto queen = std::make_shared<Queen>(Side::WHITE);
+    moves = queen->canMove(pieces, kingPos);
     for (unsigned int &i: moves)
         if (pieces[kingPos]->getSide() != pieces[i]->getSide()
             && pieces[i]->getSide() != Side::EMPTY
             && pieces[i]->getCode() == 65 + (kingSide == Side::WHITE ? 0 : 1)) {
-//            std::cout << "In check by Queen from " << i << '\n';
             return true;
         }
 
     /// A King cannot give Check, but can protect Pieces
     /// And will block Kings from staying next to each other
-    moves = Game::kingMoves(kingPos);
+    auto king = std::make_shared<King>(Side::WHITE);
+    moves = king->canMove(pieces, kingPos);
     for (unsigned int &i: moves)
         if (pieces[kingPos]->getSide() != pieces[i]->getSide()
             && pieces[i]->getSide() != Side::EMPTY
             && pieces[i]->getCode() == 129 + (kingSide == Side::WHITE ? 0 : 1)) {
-            std::cout << "In check by King from " << i << '\n';
             return true;
         }
 
@@ -682,3 +507,4 @@ bool Game::isCheckmate(Side kingSide) {
     }
     return true;
 }
+

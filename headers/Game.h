@@ -59,17 +59,12 @@ private:
     bool isPiece(unsigned int i);
     void drawPossibleMove(unsigned int val);
     void resetPossibleMoves();
-    std::vector<unsigned int> pieceMoves(unsigned int buttonPos);
+
+    void enPassantMoves(unsigned int pos, std::vector<unsigned int> &moves);
     std::vector<unsigned int> legalMoves(unsigned int buttonPos);
     void dragMove(unsigned int buttonPos);
     void make_move(unsigned int start, unsigned int destination);
 
-    std::vector<unsigned int> pawnMoves(unsigned int i);
-    std::vector<unsigned int> knightMoves(unsigned int pos);
-    std::vector<unsigned int> bishopMoves(unsigned int pos);
-    std::vector<unsigned int> rookMoves(unsigned int pos);
-    std::vector<unsigned int> queenMoves(unsigned int pos);
-    std::vector<unsigned int> kingMoves(unsigned int pos);
 
     bool isCheck(Side kingSide);
     bool isCheckmate(Side kingSide);
