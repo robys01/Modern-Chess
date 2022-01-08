@@ -60,7 +60,7 @@ private:
     void drawPossibleMove(unsigned int val);
     void resetPossibleMoves();
 
-    void enPassantMoves(unsigned int pos, std::vector<unsigned int> &moves);
+    void addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves);
     std::vector<unsigned int> legalMoves(unsigned int buttonPos);
     void dragMove(unsigned int buttonPos);
     void make_move(unsigned int start, unsigned int destination);

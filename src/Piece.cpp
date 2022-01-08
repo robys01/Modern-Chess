@@ -332,6 +332,6 @@ std::shared_ptr<Piece> EmptySpace::clone() const {
     return std::make_shared<EmptySpace>(*this);
 }
 
-std::vector<unsigned int> EmptySpace::canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) {
+std::vector<unsigned int> EmptySpace::canMove([[maybe_unused]] std::vector<std::shared_ptr<Piece>> &pieces, [[maybe_unused]] unsigned int pos) {
     return {};
 }

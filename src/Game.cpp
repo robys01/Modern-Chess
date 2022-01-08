@@ -263,8 +263,7 @@ void Game::resetPossibleMoves() {
         it.setFillColor(sf::Color::Transparent);
 }
 
-void Game::enPassantMoves(unsigned int pos, std::vector<unsigned int> &moves) {
-    std::cout<<"de ce nu merge?\n";
+void Game::addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves) {
     if (pieces[pos]->getCode() == 5) {
         /// En Passant Left
         if (pos % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::WHITE && enPassant == (int) pos + 7)
@@ -278,20 +277,21 @@ void Game::enPassantMoves(unsigned int pos, std::vector<unsigned int> &moves) {
         if (pos % 8 != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::BLACK && enPassant == (int) pos - 7)
             moves.push_back(pos - 7);
         /// En Passant Right
-        if ((pos + 1) % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::BLACK && enPassant == (int) pos - 9)
+        if ((pos + 1) % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::BLACK &&
+            enPassant == (int) pos - 9)
             moves.push_back(pos - 9);
     }
 }
 
-
 std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
     std::vector<unsigned int> moves;
 
-    if(pieces[buttonPos]->getSide() == (whiteTurn ? Side::WHITE : Side::BLACK))
+    /// Right turn condition
+    if (pieces[buttonPos]->getSide() == (whiteTurn ? Side::WHITE : Side::BLACK))
         moves = pieces[buttonPos]->canMove(pieces, buttonPos);
 
-    if(pieces[buttonPos]->getCode() == 5 + (int)whiteTurn)
-        enPassantMoves(buttonPos, moves);
+    if (pieces[buttonPos]->getCode() == 5 + (int) whiteTurn)
+        addEnPassantMoves(buttonPos, moves);
 
     ///// Can't move pinned Pieces /////    ... and can't move until is not Check anymore
     for (unsigned int it = 0; it < moves.size();) {
@@ -412,9 +412,8 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     whiteTurn = !whiteTurn;
     enPassant = -1;
 
-    /// En Passant
-    if (pieces[destination]->getCode() == 5 + (int) !whiteTurn &&
-        (int) (start - destination) == 16 * (!whiteTurn ? 1 : -1)) {    // Gotta reverse turns
+    if (pieces[destination]->getCode() == 5 + (int) !whiteTurn &&    /// En Passant
+        (int) (start - destination) == 16 * (!whiteTurn ? 1 : -1)) {
         enPassant = (int) destination + (!whiteTurn ? 8 : -8);
     } else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::BLACK);
@@ -440,55 +439,28 @@ bool Game::isCheck(Side kingSide) {
     const unsigned int kingPos = kingSide == Side::WHITE ? whiteKingPos : blackKingPos;
     std::vector<unsigned int> moves;
 
+    /// Pawn Checks
     if ((kingSide == Side::WHITE && (pieces[kingPos - 7]->getCode() == 5 || pieces[kingPos - 9]->getCode() == 5)) ||
         (kingSide == Side::BLACK && (pieces[kingPos + 7]->getCode() == 6 || pieces[kingPos + 9]->getCode() == 6))) {
         return true;
     }
 
-    auto knight = std::make_shared<Knight>(Side::WHITE);
-    moves = knight->canMove(pieces, kingPos);
-    for (unsigned int &i: moves)
-        if (pieces[kingPos]->getSide() != pieces[i]->getSide()
-            && pieces[i]->getSide() != Side::EMPTY
-            && pieces[i]->getCode() == 9 + (kingSide == Side::WHITE ? 0 : 1)) {
-            return true;
-        }
-    auto bishop = std::make_shared<Bishop>(Side::WHITE);
-    moves = bishop->canMove(pieces, kingPos);
-    for (unsigned int &i: moves)
-        if (pieces[kingPos]->getSide() != pieces[i]->getSide()
-            && pieces[i]->getSide() != Side::EMPTY
-            && pieces[i]->getCode() == 17 + (kingSide == Side::WHITE ? 0 : 1)) {
-            return true;
-        }
-    auto rook = std::make_shared<Rook>(Side::WHITE);
-    moves = rook->canMove(pieces, kingPos);
-    for (unsigned int &i: moves)
-        if (pieces[kingPos]->getSide() != pieces[i]->getSide()
-            && pieces[i]->getSide() != Side::EMPTY
-            && pieces[i]->getCode() == 33 + (kingSide == Side::WHITE ? 0 : 1)) {
-            return true;
-        }
-    auto queen = std::make_shared<Queen>(Side::WHITE);
-    moves = queen->canMove(pieces, kingPos);
-    for (unsigned int &i: moves)
-        if (pieces[kingPos]->getSide() != pieces[i]->getSide()
-            && pieces[i]->getSide() != Side::EMPTY
-            && pieces[i]->getCode() == 65 + (kingSide == Side::WHITE ? 0 : 1)) {
-            return true;
-        }
+    static std::array<std::shared_ptr<Piece>, 5> staticPieces = {
+            std::make_shared<Knight>(Side::WHITE),
+            std::make_shared<Bishop>(Side::WHITE),
+            std::make_shared<Rook>(Side::WHITE),
+            std::make_shared<Queen>(Side::WHITE),
+            std::make_shared<King>(Side::WHITE)};
 
-    /// A King cannot give Check, but can protect Pieces
-    /// And will block Kings from staying next to each other
-    auto king = std::make_shared<King>(Side::WHITE);
-    moves = king->canMove(pieces, kingPos);
-    for (unsigned int &i: moves)
-        if (pieces[kingPos]->getSide() != pieces[i]->getSide()
-            && pieces[i]->getSide() != Side::EMPTY
-            && pieces[i]->getCode() == 129 + (kingSide == Side::WHITE ? 0 : 1)) {
-            return true;
-        }
-
+    for (auto &piece: staticPieces) {
+        moves = piece->canMove(pieces, kingPos);
+        for (unsigned int i: moves)
+            if (pieces[kingPos]->getSide() != pieces[i]->getSide()
+                && pieces[i]->getSide() != Side::EMPTY
+                && pieces[i]->getCode() == piece->getCode() - (kingSide == Side::WHITE ? 1 : 0)) {
+                return true;
+            }
+    }
     return false;
 }
 
@@ -507,4 +479,3 @@ bool Game::isCheckmate(Side kingSide) {
     }
     return true;
 }
-
