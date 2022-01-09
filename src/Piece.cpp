@@ -49,8 +49,6 @@ Pawn::Pawn(const Side &side) : Piece(side) {
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
 }
 
-Pawn::~Pawn() = default;
-
 void Pawn::isPressed() {
     std::cout << "Un pas inainte, 0 inapoi\n";
 }
@@ -115,10 +113,6 @@ Knight::Knight(const Side &side) : Piece(side) {
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
 }
 
-Knight::~Knight() {
-
-}
-
 void Knight::isPressed() {
     std::cout << "Rapa dunga dunga, la piratu-i Punga\n";
 }
@@ -154,10 +148,6 @@ Bishop::Bishop(const Side &side) : Piece(side) {
     code = (1 << 4) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteBishop : Textures::blackBishop);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
-}
-
-Bishop::~Bishop() {
-
 }
 
 void Bishop::isPressed() {
@@ -206,10 +196,6 @@ Rook::Rook(const Side &side) : Piece(side) {
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
 }
 
-Rook::~Rook() {
-
-}
-
 void Rook::isPressed() {
     std::cout << "Vine tura cu viteza\n";
 }
@@ -255,10 +241,6 @@ Queen::Queen(const Side &side) : Piece(side) {
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
 }
 
-Queen::~Queen() {
-
-}
-
 void Queen::isPressed() {
     std::cout << "Ma duc unde vreau\n";
 }
@@ -285,10 +267,6 @@ King::King(const Side &side) : Piece(side) {
     code = (1 << 7) + (int) side;
     pSprite.setTexture(side == Side::WHITE ? Textures::whiteKing : Textures::blackKing);
     pSprite.setOrigin(pSprite.getTexture()->getSize().x / 2, pSprite.getTexture()->getSize().y / 2);
-}
-
-King::~King() {
-
 }
 
 void King::isPressed() {
@@ -321,8 +299,6 @@ std::vector<unsigned int> King::canMove(std::vector<std::shared_ptr<Piece>> &pie
 }
 
 EmptySpace::EmptySpace() : Piece(Side::EMPTY) {}
-
-EmptySpace::~EmptySpace() = default;
 
 void EmptySpace::isPressed() {
     std::cout << "Ce sa muti?\n";

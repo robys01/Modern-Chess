@@ -21,8 +21,8 @@ protected:
     sf::Sprite pSprite;
 
 public:
-    Piece(const Side& side);
-    virtual ~Piece();
+    explicit Piece(const Side& side);
+    ~Piece();
     virtual void isPressed() = 0;
 
     virtual std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) = 0;
@@ -44,8 +44,7 @@ public:
 class Pawn : public Piece {
 
 public:
-    Pawn(const Side& side);
-    ~Pawn() override;
+    explicit Pawn(const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -56,8 +55,7 @@ public:
 
 class Knight : public Piece {
 public:
-    Knight(const Side& side);
-    ~Knight() override;
+    explicit Knight(const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -68,8 +66,7 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop( const Side& side);
-    ~Bishop() override;
+    explicit Bishop( const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -80,8 +77,7 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(const Side& side);
-    ~Rook() override;
+    explicit Rook(const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -92,8 +88,7 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(const Side& side);
-    ~Queen() override;
+    explicit Queen(const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -104,8 +99,7 @@ public:
 
 class King : public Piece {
 public:
-    King(const Side& side);
-    ~King() override;
+    explicit King(const Side& side);
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
@@ -118,7 +112,6 @@ class EmptySpace : public Piece {
 
 public:
     EmptySpace();
-    ~EmptySpace() override;
     void isPressed() override;
 
     std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) override;
