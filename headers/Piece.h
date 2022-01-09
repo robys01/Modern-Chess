@@ -22,7 +22,7 @@ protected:
 
 public:
     explicit Piece(const Side& side);
-    ~Piece();
+    virtual ~Piece();
     virtual void isPressed() = 0;
 
     virtual std::vector<unsigned int> canMove(std::vector<std::shared_ptr<Piece>> &pieces, unsigned int pos) = 0;
