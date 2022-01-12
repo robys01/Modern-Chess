@@ -12,7 +12,7 @@
 Game *Game::chess = nullptr;
 
 Game::Game() :
-        window(sf::VideoMode(WIDTH, HEIGHT), "Modern Chess", sf::Style::Close | sf::Style::Resize),
+        window(sf::VideoMode(WIDTH, HEIGHT), "Modern Chess", sf::Style::Close),
         chessBoard(HEIGHT) {
     window.setFramerateLimit(144);
     try {
@@ -84,6 +84,7 @@ void Game::run() {
         drawGame();
         window.display();
     }
+    delete chess;
 }
 
 void Game::drawGame() {
@@ -226,12 +227,8 @@ void Game::readFEN(const std::string &args) {
 }
 
 void Game::setPieces() {
-    for (unsigned int i = 0; i < pieces.size(); i++) {
-
-        pieces[i]->setPosition(squareWidth * (i % 8) + squareWidth / 2.0f,
-                               (squareWidth * (i / 8)) + squareWidth / 2.0f);
-        pieces[i]->setScale(1 * scale, 1 * scale);
-    }
+    for (unsigned int i = 0; i < pieces.size(); i++)
+        setPiece(i);
 }
 
 void Game::setPiece(unsigned int pos) {
@@ -239,7 +236,6 @@ void Game::setPiece(unsigned int pos) {
                              (squareWidth * (pos / 8)) + squareWidth / 2.0f);
     pieces[pos]->setScale(1 * scale, 1 * scale);
 }
-
 
 bool Game::isPiece(unsigned int i) {
     if (pieces[i]->getCode() == 0) {
@@ -274,9 +270,8 @@ void Game::addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves)
             moves.push_back(pos + 9);
     } else if (pieces[pos]->getCode() == 6) {
         /// En Passant Left
-        if (pos % 8 == 0)
-            return;
-        if (pos % 8 != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::BLACK && enPassant == (int) pos - 7)
+        if ((pos % 8) != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::BLACK &&
+            enPassant == (int) pos - 7)
             moves.push_back(pos - 7);
         /// En Passant Right
         if ((pos - 1) % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::BLACK &&
@@ -442,14 +437,18 @@ bool Game::isCheck(Side kingSide) {
     const unsigned int kingPos = kingSide == Side::WHITE ? whiteKingPos : blackKingPos;
     std::vector<unsigned int> moves;
 
-    /// Pawn Checks - fixed
-    if ((kingSide == Side::WHITE &&
-         ((pieces[kingPos - 7]->getCode() == 5 && (kingPos - 7 + 1) % 8 != 0) ||
-          (pieces[kingPos - 9]->getCode() == 5 && (kingPos - 9) % 8 != 0))) ||
-        (kingSide == Side::BLACK &&
-         ((pieces[kingPos + 7]->getCode() == 6 && (kingPos + 7 + 1) % 8 != 0) ||
-          (pieces[kingPos + 9]->getCode() == 6 && (kingPos + 9) % 8 != 0)))) {
-        return true;
+    /// Pawn Checks
+    if (kingSide == Side::WHITE && kingPos > 16) {
+        if ((pieces[kingPos - 7]->getCode() == 5 && (kingPos + 1) % 8 != 0) ||
+            (pieces[kingPos - 9]->getCode() == 5 && kingPos % 8 != 0)) {
+            return true;
+        }
+
+    } else if (kingSide == Side::BLACK && kingPos < 48) {
+        if ((pieces[kingPos + 7]->getCode() == 6 && kingPos % 8 != 0) ||
+            (pieces[kingPos + 9]->getCode() == 6 && (kingPos + 1) % 8 != 0)) {
+            return true;
+        }
     }
 
     static std::array<std::shared_ptr<Piece>, 5> staticPieces = {
