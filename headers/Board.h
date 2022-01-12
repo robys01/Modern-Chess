@@ -23,18 +23,18 @@ class Board {
     static const sf::Color defaultColor2;
 
 public:
-    // Constructor and Destructor
     Board(int boardHeight, sf::Color color1 = defaultColor1, sf::Color color2 = defaultColor2);
     ~Board();
+    void changeTheme(const std::string& str = "next");
+    void drawBoard(sf::RenderWindow &window);
+    friend std::ostream &operator<<(std::ostream &os, const Board &board1);
 
+private:
     void setBoard();
     void setRows();
     void setColumns();
     void setThemes();
-    void changeTheme(const std::string& str = std::string("next"));
     void changeColors(const sf::Color &Color1, const sf::Color &Color2);
-    void drawBoard(sf::RenderWindow &window);
-    friend std::ostream &operator<<(std::ostream &os, const Board &board1);
 };
 
 #endif //MODERN_CHESS_BOARD_H
