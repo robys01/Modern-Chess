@@ -460,7 +460,7 @@ bool Game::isCheck(Side kingSide, unsigned int position) {
     for (auto &piece: staticPieces) {
         moves = piece->canMove(pieces, kingPos);
         for (unsigned int i: moves)
-            if (pieces[kingPos]->getSide() != pieces[i]->getSide()
+            if (kingSide != pieces[i]->getSide()
                 && pieces[i]->getSide() != Side::EMPTY
                 && pieces[i]->getCode() == piece->getCode() - (kingSide == Side::WHITE ? 1 : 0)) {
                 return true;
