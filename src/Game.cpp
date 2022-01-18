@@ -27,7 +27,6 @@ Game::Game() :
 
     std::cout << '\n';
     std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
-    std::cout << "black King = " << blackKingPos << " whiteKing = " << whiteKingPos << '\n';
 }
 
 Game::~Game() {
@@ -40,7 +39,7 @@ Game *Game::get_app() {
 }
 
 void Game::run() {
-//    std::cout << chessBoard;
+    std::cout << *chess;
     while (window.isOpen()) {
         sf::Event e{};
         while (window.pollEvent(e)) {
@@ -51,8 +50,7 @@ void Game::run() {
                 std::cout << "Height: " << window.getSize().y << '\n';
             }
             if (e.type == sf::Event::KeyPressed) {
-                /// Change board theme
-                if (e.key.code == sf::Keyboard::Right)
+                if (e.key.code == sf::Keyboard::Right)  /// Change board theme
                     chessBoard.changeTheme();
                 else if (e.key.code == sf::Keyboard::Left)
                     chessBoard.changeTheme("previous");
@@ -202,7 +200,7 @@ void Game::readFEN(const std::string &args) {
                 throw error_fen();
         }
     }
-    if (pieces[3]->getCode() != 129)    /// If Black King isn't in the right spot, he is not allowed to castle
+    if (pieces[4]->getCode() != 129)    /// If Black King isn't in the right spot, he is not allowed to castle
         blackCastleK = blackCastleQ = false;
     if (pieces[60]->getCode() != 130)   /// Same for the White King
         whiteCastleK = whiteCastleQ = false;
@@ -260,27 +258,28 @@ void Game::resetPossibleMoves() {
 }
 
 void Game::addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves) {
-    if (pieces[pos]->getCode() == 5) {
-        /// En Passant Left
-        if (pos % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::WHITE && enPassant == (int) pos + 7)
+    if (pieces[pos]->getCode() == 5) {         /// Black Pawn
+
+        if ((pos % 8) && pieces[pos - 1]->getSide() == Side::WHITE && enPassant == (int) pos + 7)
             moves.push_back(pos + 7);
-        /// En Passant Right
-        if ((pos + 1) % 8 != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::WHITE &&
-            enPassant == (int) pos + 9)
+
+        if (((pos + 1) % 8) && pieces[pos + 1]->getSide() == Side::WHITE && enPassant == (int) pos + 9)
             moves.push_back(pos + 9);
-    } else if (pieces[pos]->getCode() == 6) {
-        /// En Passant Left
-        if ((pos % 8) != 0 && enPassant != -1 && pieces[pos + 1]->getSide() == Side::BLACK &&
-            enPassant == (int) pos - 7)
-            moves.push_back(pos - 7);
-        /// En Passant Right
-        if ((pos - 1) % 8 != 0 && enPassant != -1 && pieces[pos - 1]->getSide() == Side::BLACK &&
-            enPassant == (int) pos - 9)
+
+    } else if (pieces[pos]->getCode() == 6) {   /// White Pawn
+
+        if ((pos % 8) && pieces[pos - 1]->getSide() == Side::BLACK && enPassant == (int) pos - 9)
             moves.push_back(pos - 9);
+
+        if (((pos + 1) % 8) && pieces[pos + 1]->getSide() == Side::BLACK && enPassant == (int) pos - 7)
+            moves.push_back(pos - 7);
     }
 }
 
 std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
+    /**
+     * This functions generates all legal moves of a piece selected.
+     */
     std::vector<unsigned int> moves;
 
     /// Right turn condition
@@ -356,35 +355,33 @@ void Game::dragMove(unsigned int buttonPos) {
     std::cout << buttonRelease << '\n';
     /////////////////////////////////////
 
-    for (auto m: moves) {
-        if (buttonRelease == m) {
-            make_move(buttonPos, buttonRelease);
-            resetPossibleMoves();
-            printPieces();
-            whiteChecked = blackChecked = false;
-            if (isCheck(Side::WHITE)) {
-                std::cout << "White King check!\n";
-                whiteChecked = true;
-            } else if (isCheck(Side::BLACK)) {
-                std::cout << "Black King check!\n";
-                blackChecked = true;
-            }
-                /// DRAW CONDITIONS
-            else if ((isCheckmate(Side::WHITE) && whiteTurn) ||
-                     (isCheckmate(Side::BLACK) && !whiteTurn))
-                std::cout << "Stalemate!";
-            else if (nrMovesWithoutCapture >= 50)
-                std::cout << "Draw by the 50 move rule!";
-            // Draw by repetition
-
-            /// CHECKMATE
-            if (whiteChecked && isCheckmate(Side::WHITE))
-                std::cout << "Checkmate! Black won!";
-            else if (blackChecked && isCheckmate(Side::BLACK))
-                std::cout << "Checkmate! White won!";
-
-            return;
+    if (std::any_of(moves.begin(), moves.end(), [buttonRelease](const auto a) { return a == buttonRelease; })) {
+        make_move(buttonPos, buttonRelease);
+        resetPossibleMoves();
+        printPieces();
+        whiteChecked = blackChecked = false;
+        if (isCheck(Side::WHITE)) {
+            std::cout << "White King check!\n";
+            whiteChecked = true;
+        } else if (isCheck(Side::BLACK)) {
+            std::cout << "Black King check!\n";
+            blackChecked = true;
         }
+        /// DRAW CONDITIONS
+        if ((isCheckmate(Side::WHITE) && whiteTurn && !whiteChecked) ||
+            (isCheckmate(Side::BLACK) && !whiteTurn && !blackChecked))
+            std::cout << "Stalemate!";
+        else if (nrMovesWithoutCapture >= 50)
+            std::cout << "Draw by the 50 move rule!";
+        // Draw by repetition
+
+        /// CHECKMATE
+        if (whiteChecked && isCheckmate(Side::WHITE))
+            std::cout << "Checkmate! Black won!";
+        else if (blackChecked && isCheckmate(Side::BLACK))
+            std::cout << "Checkmate! White won!";
+
+        return;
     }
 
     /// Not a valid move
@@ -393,9 +390,9 @@ void Game::dragMove(unsigned int buttonPos) {
 
 void Game::make_move(unsigned int start, unsigned int destination) {
 
-    if (pieces[destination]->getSide() != Side::EMPTY)
+    if (pieces[destination]->getSide() != Side::EMPTY)  /// Piece Captured
         nrMovesWithoutCapture = -1;
-    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int) whiteTurn) {
+    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int) whiteTurn) {    /// En Passant Capture
         nrMovesWithoutCapture = -1;
         pieces[destination + (whiteTurn ? 8 : -8)] = std::make_shared<EmptySpace>();
     }
@@ -406,7 +403,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     pieces[start] = std::make_shared<EmptySpace>();  /// Becomes empty space
 
     enPassant = -1;
-    if (pieces[destination]->getCode() == 5 + (int) whiteTurn &&    /// En Passant
+    if (pieces[destination]->getCode() == 5 + (int) whiteTurn &&    /// Set En Passant
         (int) (start - destination) == 16 * (whiteTurn ? 1 : -1)) {
         enPassant = (int) destination + (whiteTurn ? 8 : -8);
     } else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
@@ -427,14 +424,16 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     std::cout << "En Passant: " << enPassant << '\n';
 }
 
-bool Game::isCheck(Side kingSide) {
+
+bool Game::isCheck(Side kingSide, unsigned int position) {
     /**
      * This function returns true if the King of the 'kingSide' color is in check.
      * It generates all possible moves from the King and verifies if there is any other piece from the opposite color.
      * This function is needed because more pieces can give a Check at the same time (discovery checks)
      */
 
-    const unsigned int kingPos = kingSide == Side::WHITE ? whiteKingPos : blackKingPos;
+    const unsigned int kingPos = (position != 64 ? position
+                                                 : (kingSide == Side::WHITE ? whiteKingPos : blackKingPos));
     std::vector<unsigned int> moves;
 
     /// Pawn Checks

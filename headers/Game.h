@@ -9,8 +9,8 @@
 #include "Board.h"
 #include "Piece.h"
 
-const int WIDTH = 512;  // momentan global, in viitor citite din fisier
-const int HEIGHT = 512;
+const int WIDTH = 600;  // momentan global, in viitor citite din fisier
+const int HEIGHT = 600;
 const int squareSize = HEIGHT / 8; // used for Board positions
 
 const float squareWidth = HEIGHT / 8.0f;    // used for Positioning Pieces
@@ -61,12 +61,14 @@ private:
     void resetPossibleMoves();
 
     void addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves);
+//    void addCastlingKingSide(unsigned int pos, std::vector<unsigned int> &moves);
+//    void addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &moves);
     std::vector<unsigned int> legalMoves(unsigned int buttonPos);
     void dragMove(unsigned int buttonPos);
     void make_move(unsigned int start, unsigned int destination);
 
 
-    bool isCheck(Side kingSide);
+    bool isCheck(Side kingSide, unsigned int position = 64);
     bool isCheckmate(Side kingSide);
 };
 

@@ -19,7 +19,6 @@
 int main() {
 
     auto sah = Game::get_app();
-    std::cout << *sah << '\n';
     sah->run();
 
     return 0;
