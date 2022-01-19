@@ -24,9 +24,11 @@ Game::Game() :
     }
     for (int i = 0; i < 64; i++)
         std::cout << (i % 8) + (i / 8) * 8 << ((i + 1) % 8 ? " " : "\n");
+    for (const auto &it: pieces)
+        if (it->getCode())
+            it->getSide() == Side::WHITE ? whiteStats.addPiece(it->getCode()) : blackStats.addPiece(it->getCode());
 
-    std::cout << '\n';
-    std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
+    showInfo();
 }
 
 Game::~Game() {
@@ -105,6 +107,13 @@ void Game::printPieces() {
     for (unsigned int i = 0; i < pieces.size(); i++)
         std::cout << (*pieces[i]) << ((i + 1) % 8 ? " " : "\n");
 }
+
+void Game::showInfo() {
+    std::cout << '\n';
+    std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
+    std::cout << whiteStats << blackStats;
+}
+
 
 void Game::readFEN(const std::string &args) {
     std::ifstream fin(args);
@@ -390,11 +399,19 @@ void Game::dragMove(unsigned int buttonPos) {
 
 void Game::make_move(unsigned int start, unsigned int destination) {
 
-    if (pieces[destination]->getSide() != Side::EMPTY)  /// Piece Captured
+    if (pieces[destination]->getSide() != Side::EMPTY) { /// Piece Captured
         nrMovesWithoutCapture = -1;
-    if (enPassant == (int) destination && pieces[start]->getCode() == 5 + (int) whiteTurn) {    /// En Passant Capture
+
+        (whiteTurn ? blackStats.addPiece(pieces[destination]->getCode(), true)
+                   : whiteStats.addPiece(pieces[destination]->getCode(), true));
+    } else if (enPassant == (int) destination &&
+               pieces[start]->getCode() == 5 + (int) whiteTurn) {    /// En Passant Capture
         nrMovesWithoutCapture = -1;
         pieces[destination + (whiteTurn ? 8 : -8)] = std::make_shared<EmptySpace>();
+
+        (whiteTurn ? blackStats.addPiece(5, true)
+                   : whiteStats.addPiece(6, true));
+
     }
 
     pieces[start]->setPosition(squareWidth * (destination % 8) + squareWidth / 2.0f,
@@ -409,19 +426,20 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     } else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::BLACK);
         setPiece(destination);
+        whiteStats.addPiece(5, true);
+        whiteStats.addPiece(65);
     } else if (pieces[destination]->getCode() == 6 && destination < 8) {  /// White Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::WHITE);
         setPiece(destination);
+        whiteStats.addPiece(6, true);
+        whiteStats.addPiece(66);
     } else if (start == whiteKingPos || start == blackKingPos) /// Updates the position of the Kings
         start == whiteKingPos ? whiteKingPos = destination : blackKingPos = destination;
 
     nrMoves++;
     nrMovesWithoutCapture++;
     whiteTurn = !whiteTurn;
-
-    std::cout << '\n';
-    std::cout << "Nr moves: " << nrMoves << '\n' << (whiteTurn ? "White Turn" : "Black Turn") << '\n';
-    std::cout << "En Passant: " << enPassant << '\n';
+    showInfo();
 }
 
 

@@ -8,6 +8,7 @@
 #include <memory>
 #include "Board.h"
 #include "Piece.h"
+#include "PieceStats.h"
 
 const int WIDTH = 600;  // momentan global, in viitor citite din fisier
 const int HEIGHT = 600;
@@ -42,6 +43,9 @@ class Game {
     int nrMoves;
     int nrMovesWithoutCapture;
 
+    PieceStats<Side::WHITE> whiteStats;
+    PieceStats<Side::BLACK> blackStats;
+
 public:
     void run();
     static Game* get_app();
@@ -55,6 +59,7 @@ private:
     void setPiece(unsigned int pos);
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
     void printPieces();
+    void showInfo();
 
     bool isPiece(unsigned int i);
     void drawPossibleMove(unsigned int val);
