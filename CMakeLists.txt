@@ -20,7 +20,7 @@ set(SFML_DIR "C:/Faculta/SFML/lib/cmake/SFML")
 
 set(SOURCES
         main.cpp
-        src/Game.cpp src/Board.cpp src/Piece.cpp src/Textures.cpp src/ChessExceptions.cpp)
+        src/Game.cpp src/Board.cpp src/Piece.cpp src/Textures.cpp src/ChessExceptions.cpp src/PieceStats.cpp)
 
 set(CMAKE_INSTALL_PREFIX artifacts)
 

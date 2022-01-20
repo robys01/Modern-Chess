@@ -24,7 +24,7 @@ FetchContent_MakeAvailable(SFML)
 
 set(SOURCES
         main.cpp
-        src/Game.cpp src/Board.cpp src/Piece.cpp src/Textures.cpp src/ChessExceptions.cpp)
+        src/Game.cpp src/Board.cpp src/Piece.cpp src/Textures.cpp src/ChessExceptions.cpp src/PieceStats.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SFML_SOURCE_DIR}/include)
