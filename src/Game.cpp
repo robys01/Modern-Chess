@@ -426,8 +426,8 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     } else if (pieces[destination]->getCode() == 5 && destination > 55) {   /// Black Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::BLACK);
         setPiece(destination);
-        whiteStats.addPiece(5, true);
-        whiteStats.addPiece(65);
+        blackStats.addPiece(5, true);
+        blackStats.addPiece(65);
     } else if (pieces[destination]->getCode() == 6 && destination < 8) {  /// White Pawn Promote
         pieces[destination] = std::make_shared<Queen>(Side::WHITE);
         setPiece(destination);
