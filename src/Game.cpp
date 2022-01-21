@@ -24,10 +24,8 @@ Game::Game() :
     }
     for (int i = 0; i < 64; i++)
         std::cout << (i % 8) + (i / 8) * 8 << ((i + 1) % 8 ? " " : "\n");
-    for (const auto &it: pieces)
-        if (it->getCode())
-            it->getSide() == Side::WHITE ? whiteStats.addPiece(it->getCode()) : blackStats.addPiece(it->getCode());
 
+    whiteStats.setStats(pieces); blackStats.setStats(pieces);
     showInfo();
 }
 
@@ -61,7 +59,10 @@ void Game::run() {
                     resetPossibleMoves();
                     readFEN("board.txt");
                     setPieces();
+                    whiteStats.resetPieces(); blackStats.resetPieces();
+                    whiteStats.setStats(pieces); blackStats.setStats(pieces);
                     std::cout << "Board has been reset\n";
+                    showInfo();
                 }
             }
             ////// Move mechanics //////
@@ -111,6 +112,7 @@ void Game::printPieces() {
 void Game::showInfo() {
     std::cout << '\n';
     std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
+    std::cout << "En Passant: " << enPassant << '\n';
     std::cout << whiteStats << blackStats;
 }
 
@@ -126,10 +128,6 @@ void Game::readFEN(const std::string &args) {
     /// Board representation
     int i, nrElements = 0, nrKings = 0;
     for (i = 0; i < (int) s.size(); i++) {
-        if (s[i] == 'K' || s[i] == 'k')
-            nrKings++;
-        if (nrKings > 2)
-            throw error_fen();
 
         if (s[i] >= '1' && s[i] <= '9') {
             nrElements += (int) s[i] - '0';
@@ -165,6 +163,7 @@ void Game::readFEN(const std::string &args) {
             case 'K':
                 pieces.push_back(std::make_shared<King>(side));
                 nrElements++;
+                nrKings++;
                 break;
         }
     }

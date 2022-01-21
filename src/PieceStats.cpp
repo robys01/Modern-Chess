@@ -61,6 +61,19 @@ int PieceStats<side>::getScore() {
     return score;
 }
 
+template<Side side>
+void PieceStats<side>::resetPieces() {
+    for (int i = 0; i < 6; i++)
+        nrPieces[i] = 0;
+}
+
+template<Side side>
+void PieceStats<side>::setStats(std::vector<std::shared_ptr<Piece>> &pieces) {
+    for (const auto &it: pieces)
+        if ((int) side & it->getCode())
+            addPiece(it->getCode());
+}
+
 
 template
 class PieceStats<Side::WHITE>;

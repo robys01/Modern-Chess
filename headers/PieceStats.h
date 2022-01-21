@@ -30,6 +30,8 @@ public:
     int getSumPieces();
 
     int getScore();
+    void resetPieces();
+    void setStats(std::vector<std::shared_ptr<Piece>> &pieces);
 
     friend std::ostream &operator<<(std::ostream &os, PieceStats<side> &stats) {
         os << (side == Side::WHITE ? "Alb: " : "Negru: ") << stats.getScore() << '\n';
