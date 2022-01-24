@@ -475,7 +475,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         (whiteTurn ? blackStats.addPiece(5, true)
                    : whiteStats.addPiece(6, true));
 
-    } else if(pieces[start]->getCode() == 129 + (int) whiteTurn && !((start + destination) % 2)) {
+    } else if(pieces[start]->getCode() == 129 + (int) whiteTurn && abs((int)(start-destination)) == 2 ) {
         /// Castle
         make_castle(destination, pieces[start]->getSide());
     }
