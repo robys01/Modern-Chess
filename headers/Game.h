@@ -66,11 +66,13 @@ private:
     void resetPossibleMoves();
 
     void addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves);
-//    void addCastlingKingSide(unsigned int pos, std::vector<unsigned int> &moves);
-//    void addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &moves);
+    void addCastlingKingSide(unsigned int pos, std::vector<unsigned int> &moves);
+    void addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &moves);
     std::vector<unsigned int> legalMoves(unsigned int buttonPos);
     void dragMove(unsigned int buttonPos);
     void make_move(unsigned int start, unsigned int destination);
+    void make_castle(unsigned int pos, Side side);
+    void castleCheck();
 
 
     bool isCheck(Side kingSide, unsigned int position = 64);

@@ -284,6 +284,53 @@ void Game::addEnPassantMoves(unsigned int pos, std::vector<unsigned int> &moves)
     }
 }
 
+void Game::addCastlingKingSide(unsigned int pos, std::vector<unsigned int> &moves) {
+    Side side = (pieces[pos]->getSide());
+    unsigned kingPos = 4 + (side == Side::WHITE ? 56 : 0);
+
+    if(pieces[kingPos + 1]->getSide() == Side::EMPTY && pieces[kingPos + 2]->getSide() == Side::EMPTY) {
+        pieces[kingPos + 1] = std::make_shared<Rook>(side);
+        pieces[kingPos + 2] = std::make_shared<Rook>(side);
+        if(!isCheck(side, kingPos + 1) && !isCheck(side, kingPos + 2)) {
+            moves.push_back(kingPos + 2);
+        }
+        pieces[kingPos + 1] = std::make_shared<EmptySpace>();
+        pieces[kingPos + 2] = std::make_shared<EmptySpace>();
+    }
+}
+
+void Game::addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &moves) {
+    Side side = (pieces[pos]->getSide());
+    unsigned kingPos = 4 + (side == Side::WHITE ? 56 : 0);
+
+    if(pieces[kingPos - 1]->getSide() == Side::EMPTY && pieces[kingPos - 2]->getSide() == Side::EMPTY) {
+        pieces[kingPos - 1] = std::make_shared<Rook>(side);
+        pieces[kingPos - 2] = std::make_shared<Rook>(side);
+        if(!isCheck(side, kingPos - 1) && !isCheck(side, kingPos - 2)) {
+            moves.push_back(kingPos - 2);
+        }
+        pieces[kingPos - 1] = std::make_shared<EmptySpace>();
+        pieces[kingPos - 2] = std::make_shared<EmptySpace>();
+    }
+}
+
+void Game::make_castle(unsigned pos, Side side) {
+    if(pos == 6 + (side == Side::WHITE ? 56 : 0)) {
+        pieces[pos - 1] = pieces[pos + 1]->clone();
+        pieces[pos + 1] = std::make_shared<EmptySpace>();
+        setPiece(pos - 1);
+    }else if(pos == 2 + (side == Side::WHITE ? 56 : 0)) {
+        pieces[pos + 1] = pieces[pos - 2]->clone();
+        pieces[pos - 2] = std::make_shared<EmptySpace>();
+        setPiece(pos + 1);
+    }
+    if(side == Side::WHITE)
+        whiteCastleQ = whiteCastleK = false;
+    else
+        blackCastleQ = blackCastleK = false;
+
+}
+
 std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
     /**
      * This functions generates all legal moves of a piece selected.
@@ -324,7 +371,22 @@ std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
         pieces[moves[it]] = aux->clone();
         it++;
     }
-    /////////////////////////////////////////
+
+    /// Add Castling Moves
+    if(pieces[buttonPos]->getCode() == 129 + (int)whiteTurn) {
+        if (pieces[buttonPos]->getCode() == 129) {
+            if (blackCastleK)
+                addCastlingKingSide(buttonPos, moves);
+            else if (blackCastleQ)
+                addCastlingQueenSide(buttonPos, moves);
+        } else if (pieces[buttonPos]->getCode() == 130) {
+            if (whiteCastleK)
+                addCastlingKingSide(buttonPos, moves);
+            else if (whiteCastleQ)
+                addCastlingQueenSide(buttonPos, moves);
+        }
+    }
+
     return moves;
 }
 
@@ -411,7 +473,12 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         (whiteTurn ? blackStats.addPiece(5, true)
                    : whiteStats.addPiece(6, true));
 
+    } else if(pieces[start]->getCode() == 129 + (int) whiteTurn && !((start + destination) % 2)) {
+        /// Castle
+        make_castle(destination, pieces[start]->getSide());
     }
+    if(whiteCastleQ || whiteCastleK) castleCheck();
+    if(blackCastleQ || blackCastleK) castleCheck();
 
     pieces[start]->setPosition(squareWidth * (destination % 8) + squareWidth / 2.0f,
                                (squareWidth * (destination / 8)) + squareWidth / 2.0f);
@@ -440,6 +507,19 @@ void Game::make_move(unsigned int start, unsigned int destination) {
     whiteTurn = !whiteTurn;
     showInfo();
 }
+
+void Game::castleCheck() {
+    if(pieces[63]->getCode() != 34)
+        whiteCastleK = false;
+    if(pieces[56]->getCode() != 34)
+        whiteCastleQ = false;
+    if(pieces[0]->getCode() != 33)
+        blackCastleQ = false;
+    if(pieces[7]->getCode() != 33)
+        blackCastleK = false;
+}
+
+
 
 
 bool Game::isCheck(Side kingSide, unsigned int position) {
