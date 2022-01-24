@@ -114,6 +114,8 @@ void Game::showInfo() {
     std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
     std::cout << "En Passant: " << enPassant << '\n';
     std::cout << whiteStats << blackStats;
+    std::cout<< "White Castle: K: " << (whiteCastleK ? "yes" : "no") << " Q: " << (whiteCastleQ ? "yes" : "no") << '\n';
+    std::cout<< "Black Castle: K: " << (blackCastleK ? "yes" : "no") << " Q: " << (blackCastleQ ? "yes" : "no") << '\n';
 }
 
 
@@ -303,7 +305,7 @@ void Game::addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &mov
     Side side = (pieces[pos]->getSide());
     unsigned kingPos = 4 + (side == Side::WHITE ? 56 : 0);
 
-    if(pieces[kingPos - 1]->getSide() == Side::EMPTY && pieces[kingPos - 2]->getSide() == Side::EMPTY) {
+    if(pieces[kingPos - 1]->getSide() == Side::EMPTY && pieces[kingPos - 2]->getSide() == Side::EMPTY && pieces[kingPos - 3]->getSide() == Side::EMPTY) {
         pieces[kingPos - 1] = std::make_shared<Rook>(side);
         pieces[kingPos - 2] = std::make_shared<Rook>(side);
         if(!isCheck(side, kingPos - 1) && !isCheck(side, kingPos - 2)) {
@@ -377,12 +379,12 @@ std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
         if (pieces[buttonPos]->getCode() == 129) {
             if (blackCastleK)
                 addCastlingKingSide(buttonPos, moves);
-            else if (blackCastleQ)
+            if (blackCastleQ)
                 addCastlingQueenSide(buttonPos, moves);
         } else if (pieces[buttonPos]->getCode() == 130) {
             if (whiteCastleK)
                 addCastlingKingSide(buttonPos, moves);
-            else if (whiteCastleQ)
+            if (whiteCastleQ)
                 addCastlingQueenSide(buttonPos, moves);
         }
     }
@@ -477,8 +479,7 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         /// Castle
         make_castle(destination, pieces[start]->getSide());
     }
-    if(whiteCastleQ || whiteCastleK) castleCheck();
-    if(blackCastleQ || blackCastleK) castleCheck();
+    if(whiteCastleQ || whiteCastleK || blackCastleQ || blackCastleK) castleCheck();
 
     pieces[start]->setPosition(squareWidth * (destination % 8) + squareWidth / 2.0f,
                                (squareWidth * (destination / 8)) + squareWidth / 2.0f);
