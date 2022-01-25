@@ -18,8 +18,8 @@
 
 int main() {
 
-    auto sah = Game::get_app();
-    sah->run();
+    auto& sah = Game::get_app();
+    sah.run();
 
     return 0;
 }

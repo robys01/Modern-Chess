@@ -19,8 +19,6 @@ const float defaultWIDTH = 448.0f;
 const float scale = HEIGHT / defaultWIDTH;
 
 class Game {
-    static Game *chess;
-
     sf::RenderWindow window;
     Board chessBoard;
     std::vector<std::shared_ptr<Piece>> pieces;
@@ -48,7 +46,7 @@ class Game {
 
 public:
     void run();
-    static Game* get_app();
+    static Game& get_app();
 
 private:
     Game();

@@ -9,8 +9,6 @@
 #include "../headers/Game.h"
 #include "../headers/ChessExceptions.h"
 
-Game *Game::chess = nullptr;
-
 Game::Game() :
         window(sf::VideoMode(WIDTH, HEIGHT), "Modern Chess", sf::Style::Close),
         chessBoard(HEIGHT) {
@@ -33,13 +31,12 @@ Game::~Game() {
     std::cout << "Chess ended successfully!\n";
 }
 
-Game *Game::get_app() {
-    if (chess == nullptr) chess = new Game;
+Game &Game::get_app() {
+    static Game chess;
     return chess;
 }
 
 void Game::run() {
-    std::cout << *chess;
     while (window.isOpen()) {
         sf::Event e{};
         while (window.pollEvent(e)) {
@@ -85,7 +82,6 @@ void Game::run() {
         drawGame();
         window.display();
     }
-    delete chess;
 }
 
 void Game::drawGame() {
@@ -114,10 +110,11 @@ void Game::showInfo() {
     std::cout << "Nr moves: " << nrMoves << "\nWhite turn? " << (whiteTurn ? "Yes" : "No") << '\n';
     std::cout << "En Passant: " << enPassant << '\n';
     std::cout << whiteStats << blackStats;
-    std::cout<< "White Castle: K: " << (whiteCastleK ? "yes" : "no") << " Q: " << (whiteCastleQ ? "yes" : "no") << '\n';
-    std::cout<< "Black Castle: K: " << (blackCastleK ? "yes" : "no") << " Q: " << (blackCastleQ ? "yes" : "no") << '\n';
+    std::cout << "White Castle: K: " << (whiteCastleK ? "yes" : "no") << " Q: " << (whiteCastleQ ? "yes" : "no")
+              << '\n';
+    std::cout << "Black Castle: K: " << (blackCastleK ? "yes" : "no") << " Q: " << (blackCastleQ ? "yes" : "no")
+              << '\n';
 }
-
 
 void Game::readFEN(const std::string &args) {
     std::ifstream fin(args);
@@ -287,10 +284,10 @@ void Game::addCastlingKingSide(unsigned int pos, std::vector<unsigned int> &move
     Side side = (pieces[pos]->getSide());
     unsigned kingPos = 4 + (side == Side::WHITE ? 56 : 0);
 
-    if(pieces[kingPos + 1]->getSide() == Side::EMPTY && pieces[kingPos + 2]->getSide() == Side::EMPTY) {
+    if (pieces[kingPos + 1]->getSide() == Side::EMPTY && pieces[kingPos + 2]->getSide() == Side::EMPTY) {
         pieces[kingPos + 1] = std::make_shared<Rook>(side);
         pieces[kingPos + 2] = std::make_shared<Rook>(side);
-        if(!isCheck(side, kingPos + 1) && !isCheck(side, kingPos + 2)) {
+        if (!isCheck(side, kingPos + 1) && !isCheck(side, kingPos + 2)) {
             moves.push_back(kingPos + 2);
         }
         pieces[kingPos + 1] = std::make_shared<EmptySpace>();
@@ -302,10 +299,11 @@ void Game::addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &mov
     Side side = (pieces[pos]->getSide());
     unsigned kingPos = 4 + (side == Side::WHITE ? 56 : 0);
 
-    if(pieces[kingPos - 1]->getSide() == Side::EMPTY && pieces[kingPos - 2]->getSide() == Side::EMPTY && pieces[kingPos - 3]->getSide() == Side::EMPTY) {
+    if (pieces[kingPos - 1]->getSide() == Side::EMPTY && pieces[kingPos - 2]->getSide() == Side::EMPTY &&
+        pieces[kingPos - 3]->getSide() == Side::EMPTY) {
         pieces[kingPos - 1] = std::make_shared<Rook>(side);
         pieces[kingPos - 2] = std::make_shared<Rook>(side);
-        if(!isCheck(side, kingPos - 1) && !isCheck(side, kingPos - 2)) {
+        if (!isCheck(side, kingPos - 1) && !isCheck(side, kingPos - 2)) {
             moves.push_back(kingPos - 2);
         }
         pieces[kingPos - 1] = std::make_shared<EmptySpace>();
@@ -314,16 +312,16 @@ void Game::addCastlingQueenSide(unsigned int pos, std::vector<unsigned int> &mov
 }
 
 void Game::make_castle(unsigned pos, Side side) {
-    if(pos == 6 + (side == Side::WHITE ? 56 : 0)) {
+    if (pos == 6 + (side == Side::WHITE ? 56 : 0)) {
         pieces[pos - 1] = pieces[pos + 1]->clone();
         pieces[pos + 1] = std::make_shared<EmptySpace>();
         setPiece(pos - 1);
-    }else if(pos == 2 + (side == Side::WHITE ? 56 : 0)) {
+    } else if (pos == 2 + (side == Side::WHITE ? 56 : 0)) {
         pieces[pos + 1] = pieces[pos - 2]->clone();
         pieces[pos - 2] = std::make_shared<EmptySpace>();
         setPiece(pos + 1);
     }
-    if(side == Side::WHITE)
+    if (side == Side::WHITE)
         whiteCastleQ = whiteCastleK = false;
     else
         blackCastleQ = blackCastleK = false;
@@ -372,7 +370,7 @@ std::vector<unsigned int> Game::legalMoves(unsigned int buttonPos) {
     }
 
     /// Add Castling Moves
-    if(pieces[buttonPos]->getCode() == 129 + (int)whiteTurn) {
+    if (pieces[buttonPos]->getCode() == 129 + (int) whiteTurn) {
         if (pieces[buttonPos]->getCode() == 129) {
             if (blackCastleK)
                 addCastlingKingSide(buttonPos, moves);
@@ -472,11 +470,11 @@ void Game::make_move(unsigned int start, unsigned int destination) {
         (whiteTurn ? blackStats.addPiece(5, true)
                    : whiteStats.addPiece(6, true));
 
-    } else if(pieces[start]->getCode() == 129 + (int) whiteTurn && abs((int)(start-destination)) == 2 ) {
+    } else if (pieces[start]->getCode() == 129 + (int) whiteTurn && abs((int) (start - destination)) == 2) {
         /// Castle
         make_castle(destination, pieces[start]->getSide());
     }
-    if(whiteCastleQ || whiteCastleK || blackCastleQ || blackCastleK) castleCheck();
+    if (whiteCastleQ || whiteCastleK || blackCastleQ || blackCastleK) castleCheck();
 
     pieces[start]->setPosition(squareWidth * (destination % 8) + squareWidth / 2.0f,
                                (squareWidth * (destination / 8)) + squareWidth / 2.0f);
@@ -507,18 +505,19 @@ void Game::make_move(unsigned int start, unsigned int destination) {
 }
 
 void Game::castleCheck() {
-    if(pieces[63]->getCode() != 34)
+    if (whiteKingPos != 60)
+        whiteCastleQ = whiteCastleK = false;
+    if (blackKingPos != 4)
+        blackCastleQ = blackCastleK = false;
+    if (pieces[63]->getCode() != 34)
         whiteCastleK = false;
-    if(pieces[56]->getCode() != 34)
+    if (pieces[56]->getCode() != 34)
         whiteCastleQ = false;
-    if(pieces[0]->getCode() != 33)
+    if (pieces[0]->getCode() != 33)
         blackCastleQ = false;
-    if(pieces[7]->getCode() != 33)
+    if (pieces[7]->getCode() != 33)
         blackCastleK = false;
 }
-
-
-
 
 bool Game::isCheck(Side kingSide, unsigned int position) {
     /**
