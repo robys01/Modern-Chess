@@ -186,10 +186,6 @@ void Game::readFEN(const std::string &args) {
 
     /// Castling privileges
     fin >> s;
-    if (s[0] == '-')
-        whiteCastleK = whiteCastleQ = false;
-    else if (s[1] == '-')
-        blackCastleK = blackCastleQ = false;
     for (auto &it: s) {
         switch (it) {
             case 'K':
@@ -205,6 +201,7 @@ void Game::readFEN(const std::string &args) {
                 blackCastleQ = true;
                 break;
             case '-':
+                whiteCastleK = whiteCastleQ = blackCastleK = blackCastleQ = false;
                 break;
             default:
                 throw error_fen();
