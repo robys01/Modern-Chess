@@ -82,6 +82,7 @@ jobs:
 
       - name: Copy files to final archive
         shell: bash
+        if: runner.os == 'Linux'
         run: |
           mkdir bin
           cp -r artifacts/bin/* bin/
