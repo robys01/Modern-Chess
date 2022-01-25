@@ -14,16 +14,16 @@ sf::Texture Textures::loadTexture(const std::string &str) {
     return texture;
 }
 
-thread_local sf::Texture Textures::whitePawn = Textures::loadTexture("resources/wP.png");
-thread_local sf::Texture Textures::whiteKnight = Textures::loadTexture("resources/wN.png");
-thread_local sf::Texture Textures::whiteBishop = Textures::loadTexture("resources/wB.png");
-thread_local sf::Texture Textures::whiteRook = Textures::loadTexture("resources/wR.png");
-thread_local sf::Texture Textures::whiteQueen = Textures::loadTexture("resources/wQ.png");
-thread_local sf::Texture Textures::whiteKing = Textures::loadTexture("resources/wK.png");
+sf::Texture Textures::whitePawn = Textures::loadTexture("resources/wP.png");
+sf::Texture Textures::whiteKnight = Textures::loadTexture("resources/wN.png");
+sf::Texture Textures::whiteBishop = Textures::loadTexture("resources/wB.png");
+sf::Texture Textures::whiteRook = Textures::loadTexture("resources/wR.png");
+sf::Texture Textures::whiteQueen = Textures::loadTexture("resources/wQ.png");
+sf::Texture Textures::whiteKing = Textures::loadTexture("resources/wK.png");
 
-thread_local sf::Texture Textures::blackPawn = Textures::loadTexture("resources/bP.png");
-thread_local sf::Texture Textures::blackKnight = Textures::loadTexture("resources/bN.png");
-thread_local sf::Texture Textures::blackBishop = Textures::loadTexture("resources/bB.png");
-thread_local sf::Texture Textures::blackRook = Textures::loadTexture("resources/bR.png");
-thread_local sf::Texture Textures::blackQueen = Textures::loadTexture("resources/bQ.png");
-thread_local sf::Texture Textures::blackKing = Textures::loadTexture("resources/bK.png");
+sf::Texture Textures::blackPawn = Textures::loadTexture("resources/bP.png");
+sf::Texture Textures::blackKnight = Textures::loadTexture("resources/bN.png");
+sf::Texture Textures::blackBishop = Textures::loadTexture("resources/bB.png");
+sf::Texture Textures::blackRook = Textures::loadTexture("resources/bR.png");
+sf::Texture Textures::blackQueen = Textures::loadTexture("resources/bQ.png");
+sf::Texture Textures::blackKing = Textures::loadTexture("resources/bK.png");

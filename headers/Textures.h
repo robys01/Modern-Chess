@@ -10,19 +10,19 @@
 
 class Textures {
 public:
-    thread_local static sf::Texture whitePawn;
-    thread_local static sf::Texture whiteKnight;
-    thread_local static sf::Texture whiteBishop;
-    thread_local static sf::Texture whiteRook;
-    thread_local static sf::Texture whiteQueen;
-    thread_local static sf::Texture whiteKing;
+    static sf::Texture whitePawn;
+    static sf::Texture whiteKnight;
+    static sf::Texture whiteBishop;
+    static sf::Texture whiteRook;
+    static sf::Texture whiteQueen;
+    static sf::Texture whiteKing;
 
-    thread_local static sf::Texture blackPawn;
-    thread_local static sf::Texture blackKnight;
-    thread_local static sf::Texture blackBishop;
-    thread_local static sf::Texture blackRook;
-    thread_local static sf::Texture blackQueen;
-    thread_local static sf::Texture blackKing;
+    static sf::Texture blackPawn;
+    static sf::Texture blackKnight;
+    static sf::Texture blackBishop;
+    static sf::Texture blackRook;
+    static sf::Texture blackQueen;
+    static sf::Texture blackKing;
 
     static sf::Texture loadTexture(const std::string& str);
 };
