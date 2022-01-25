@@ -21,7 +21,7 @@ enum class PieceVal {
 template <Side side>
 class PieceStats {
 
-    std::array<int, 6> nrPieces;
+    std::array<int, 6> nrPieces{};
 
 public:
     PieceStats();
