@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         cxx: [g++, clang++]
-        cmake_config_flags: [-DBUILD_SHARED_LIBS=FALSE]
+        cmake_config_flags: [-DBUILD_SHARED_LIBS=TRUE]
         include:
           - os: macos-10.15
             cxx: clang++
@@ -79,6 +79,13 @@ jobs:
         shell: bash
         # trim prefix from ref to get tag name
         run: echo "TAG_NAME=${GITHUB_REF#'refs/tags/'}" >> $GITHUB_ENV
+
+      - name: Copy files to final archive
+        shell: bash
+        run: |
+          mkdir bin
+          cp -r artifacts/bin/* bin/
+          cp artifacts/lib/libsfml-* bin
 
       - name: Archive Release
         uses: thedoctor0/zip-release@master
