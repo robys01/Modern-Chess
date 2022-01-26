@@ -166,10 +166,7 @@ void Game::readFEN(const std::string &args) {
                 break;
         }
     }
-    if (nrKings != 2)
-        throw error_fen();
-
-    if (nrElements != 64)
+    if (nrKings != 2 || nrElements != 64)
         throw error_fen();
 
     /// Player's turn
@@ -204,11 +201,7 @@ void Game::readFEN(const std::string &args) {
                 throw error_fen();
         }
     }
-    if (pieces[4]->getCode() != 129)    /// If Black King isn't in the right spot, he is not allowed to castle
-        blackCastleK = blackCastleQ = false;
-    if (pieces[60]->getCode() != 130)   /// Same for the White King
-        whiteCastleK = whiteCastleQ = false;
-
+    castleCheck();
 
     /// En Passant possible move
     fin >> s;
