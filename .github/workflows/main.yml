@@ -84,16 +84,14 @@ jobs:
         shell: bash
         if: runner.os == 'Linux'
         run: |
-          mkdir bin
-          cp -r artifacts/bin/* bin/
-          cp artifacts/lib/libsfml-* bin
+          cp artifacts/lib/libsfml-* artifacts/bin
 
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         if: startsWith(github.ref, 'refs/tags/')
         with:
           type: 'zip'
-          path: bin
+          path: artifacts/bin
           filename: release_${{ env.TAG_NAME }}_${{ matrix.os }}_${{ matrix.cxx }}.zip
       - name: Release
         uses: softprops/action-gh-release@v1
