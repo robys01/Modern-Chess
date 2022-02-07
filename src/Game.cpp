@@ -63,7 +63,7 @@ void Game::run() {
                 }
             }
             ////// Move mechanics //////
-            if (e.type == e.MouseButtonPressed) {
+            if (e.type == e.MouseButtonPressed && !gameOver) {
                 if (e.mouseButton.button == sf::Mouse::Left) {
                     if ((0 <= e.mouseButton.x) && (e.mouseButton.x <= HEIGHT) &&
                         (0 <= e.mouseButton.y) && (e.mouseButton.y <= HEIGHT)) {
@@ -218,6 +218,7 @@ void Game::readFEN(const std::string &args) {
     fin >> s;
     nrMoves = std::stoi(s);
 
+    gameOver = false;
     fin.close();
 }
 
@@ -429,17 +430,23 @@ void Game::dragMove(unsigned int buttonPos) {
         }
         /// DRAW CONDITIONS
         if ((isCheckmate(Side::WHITE) && whiteTurn && !whiteChecked) ||
-            (isCheckmate(Side::BLACK) && !whiteTurn && !blackChecked))
+            (isCheckmate(Side::BLACK) && !whiteTurn && !blackChecked)) {
             std::cout << "Stalemate!";
-        else if (nrMovesWithoutCapture >= 50)
+            gameOver = true;
+        } else if (nrMovesWithoutCapture >= 50) {
             std::cout << "Draw by the 50 move rule!";
+            gameOver = true;
+        }
         // Draw by repetition
 
         /// CHECKMATE
-        if (whiteChecked && isCheckmate(Side::WHITE))
+        if (whiteChecked && isCheckmate(Side::WHITE)) {
             std::cout << "Checkmate! Black won!";
-        else if (blackChecked && isCheckmate(Side::BLACK))
+            gameOver = true;
+        } else if (blackChecked && isCheckmate(Side::BLACK)) {
+            gameOver = true;
             std::cout << "Checkmate! White won!";
+        }
 
         return;
     }

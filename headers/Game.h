@@ -27,6 +27,7 @@ class Game {
     /// Chess mechanics variables
     bool whiteChecked = false;
     bool blackChecked = false;
+    bool gameOver = false;
 
     unsigned int whiteKingPos;
     unsigned int blackKingPos;
