@@ -28,6 +28,8 @@ class Game {
     bool whiteChecked = false;
     bool blackChecked = false;
     bool gameOver = false;
+    sf::Text gameEnd;
+    sf::Font font;
 
     unsigned int whiteKingPos;
     unsigned int blackKingPos;
@@ -54,6 +56,7 @@ private:
     ~Game();
     void drawGame();
     void readFEN(const std::string& args);
+    void setText();
     void setPieces();
     void setPiece(unsigned int pos);
     friend std::ostream &operator<<(std::ostream &os, const Game &game);

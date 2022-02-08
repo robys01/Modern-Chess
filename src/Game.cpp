@@ -13,9 +13,11 @@ Game::Game() :
         window(sf::VideoMode(WIDTH, HEIGHT), "Modern Chess", sf::Style::Close),
         chessBoard(HEIGHT) {
     window.setFramerateLimit(144);
+
     try {
         readFEN("board.txt");
         setPieces();
+        setText();
     } catch (error_chess &error) {
         std::cerr << error.what();
         std::exit(1);
@@ -91,6 +93,7 @@ void Game::drawGame() {
         window.draw(it);
     for (auto &it: pieces)
         it->drawPiece(window);
+    window.draw(gameEnd);
 }
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
@@ -220,6 +223,13 @@ void Game::readFEN(const std::string &args) {
 
     gameOver = false;
     fin.close();
+}
+
+void Game::setText() {
+    font.loadFromFile("resources/arial.ttf");
+    gameEnd.setFont(font);
+    gameEnd.setFillColor(sf::Color(20, 20, 20));
+    gameEnd.setPosition(window.getSize().y / 2.0f - 2 * squareWidth, window.getSize().y / 2.0f - squareWidth);
 }
 
 void Game::setPieces() {
@@ -433,9 +443,11 @@ void Game::dragMove(unsigned int buttonPos) {
             (isCheckmate(Side::BLACK) && !whiteTurn && !blackChecked)) {
             std::cout << "Stalemate!";
             gameOver = true;
+            gameEnd.setString("Stalemate!\nPress R to reset.");
         } else if (nrMovesWithoutCapture >= 50) {
             std::cout << "Draw by the 50 move rule!";
             gameOver = true;
+            gameEnd.setString("Draw!\nPress R to reset.");
         }
         // Draw by repetition
 
@@ -443,9 +455,11 @@ void Game::dragMove(unsigned int buttonPos) {
         if (whiteChecked && isCheckmate(Side::WHITE)) {
             std::cout << "Checkmate! Black won!";
             gameOver = true;
+            gameEnd.setString("Checkmate! Black won!\nPress R to reset.");
         } else if (blackChecked && isCheckmate(Side::BLACK)) {
-            gameOver = true;
             std::cout << "Checkmate! White won!";
+            gameOver = true;
+            gameEnd.setString("Checkmate! White won!\nPress R to reset.");
         }
 
         return;
@@ -578,3 +592,4 @@ bool Game::isCheckmate(Side kingSide) {
     }
     return true;
 }
+
