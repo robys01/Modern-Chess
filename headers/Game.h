@@ -59,6 +59,7 @@ private:
     void setText();
     void setPieces();
     void setPiece(unsigned int pos);
+    void reset();
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
     void printPieces();
     void showInfo();

@@ -44,24 +44,13 @@ void Game::run() {
         while (window.pollEvent(e)) {
             if (e.type == sf::Event::Closed)
                 window.close();
-            if (e.type == sf::Event::Resized) {
-                std::cout << "Width: " << window.getSize().x << '\n';
-                std::cout << "Height: " << window.getSize().y << '\n';
-            }
             if (e.type == sf::Event::KeyPressed) {
                 if (e.key.code == sf::Keyboard::Right)  /// Change board theme
                     chessBoard.changeTheme();
                 else if (e.key.code == sf::Keyboard::Left)
                     chessBoard.changeTheme("previous");
-                else if (e.key.code == sf::Keyboard::R) {    /// Reset
-                    pieces.clear();
-                    resetPossibleMoves();
-                    readFEN("board.txt");
-                    setPieces();
-                    whiteStats.resetPieces(); blackStats.resetPieces();
-                    whiteStats.setStats(pieces); blackStats.setStats(pieces);
-                    std::cout << "Board has been reset\n";
-                    showInfo();
+                else if (e.key.code == sf::Keyboard::R) {
+                    reset();
                 }
             }
             ////// Move mechanics //////
@@ -93,7 +82,19 @@ void Game::drawGame() {
         window.draw(it);
     for (auto &it: pieces)
         it->drawPiece(window);
-    window.draw(gameEnd);
+    if(gameOver)
+        window.draw(gameEnd);
+}
+
+void Game::reset() {
+    pieces.clear();
+    resetPossibleMoves();
+    readFEN("board.txt");
+    setPieces();
+    whiteStats.resetPieces(); blackStats.resetPieces();
+    whiteStats.setStats(pieces); blackStats.setStats(pieces);
+    std::cout << "Board has been reset\n";
+    showInfo();
 }
 
 std::ostream &operator<<(std::ostream &os, const Game &game) {
@@ -228,7 +229,7 @@ void Game::readFEN(const std::string &args) {
 void Game::setText() {
     font.loadFromFile("resources/arial.ttf");
     gameEnd.setFont(font);
-    gameEnd.setFillColor(sf::Color(20, 20, 20));
+    gameEnd.setFillColor(sf::Color(50, 50, 50));
     gameEnd.setPosition(window.getSize().y / 2.0f - 2 * squareWidth, window.getSize().y / 2.0f - squareWidth);
 }
 
