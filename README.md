@@ -4,21 +4,23 @@
 [![Code Quality Grade](https://api.codiga.io/project/30651/status/svg)](https://app.codiga.io/public/user/github/Robyss)
 
 
-Modern-Chess is a simple chess game using C++ and SFML.
+Modern-Chess is a simple chess game using C++ and [SFML](https://www.sfml-dev.org/).
 
 This was my first project using Object-Oriented Programming concepts, and also using SFML.
-The game does not have an AI, so hopefully I will make one in the near future.
+The game does not have an AI, hopefully I will make one in the near future.
 If you are willing to try my chess game, any feedback is well received and appreciated!
 
-Huge shout-out to [Marius](https://github.com/mcmarius) for all the guiding and help through making this project.
+Huge thanks to [Marius](https://github.com/mcmarius) for all the guiding and help through making this project.
 
 
 # Guide
+The executable can be found in releases.
 Go to [releases](https://github.com/Robyss/Modern-Chess/releases) and choose from the latest version your os and a preferred compiler. 
 - ***Linux Users!*** You have to use ``LD_LIBRARY_PATH=. ./Modern-Chess`` instead of ``./Modern-Chess`` in order to make it work.
 
 If you want to compile the code, be sure you have SFML installed and configured with CMake. 
 Here is a [link](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) with a full configuration guide.
+
 You may try to use [this](https://github.com/Robyss/Modern-Chess/blob/master/.github/CMakeLists.txt) CMake file without having to install SFML.
 
 
